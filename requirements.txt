@@ -1,0 +1,10 @@
+flask
+torch
+torchvision
+opencv-python
+matplotlib
+seaborn
+scikit-learn
+fpdf
+pillow
+numpy

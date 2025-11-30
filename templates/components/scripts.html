@@ -1,0 +1,189 @@
+<script>
+    // --- 1. TYPEWRITER EFFECT CONFIGURATION ---
+    const texts = {
+        'scan': ">> MODUL INFERENSI: Memproses citra input melalui 3 arsitektur paralel. Keputusan final diambil menggunakan Weighted Ensemble Voting untuk meminimalisir bias.",
+        
+        'xray': ">> EXPLAINABLE AI: Visualisasi Gradient-weighted Class Activation Mapping (Grad-CAM). Warna merah menunjukkan area fokus utama yang digunakan model.",
+        
+        // Teks Revisi (Tanpa BMKG)
+        'evidence': ">> FORENSIK DIGITAL: Mencocokkan pola visual input dengan 1.200+ sampel dataset pelatihan tervalidasi. Menampilkan sampel referensi dengan tingkat kemiripan morfologi tertinggi.",
+        
+        // Teks Baru untuk Simulation
+        'simulation': ">> SIMULASI PREDIKTIF: Menggunakan model deret waktu meteorologi untuk memproyeksikan evolusi awan dan potensi cuaca dalam 60 menit kedepan.",
+        
+        'data': ">> METRIK EVALUASI: Analisis Confusion Matrix dan Learning Curve pada data uji. Klik grafik untuk memperbesar."
+    };
+
+    let typeInterval;
+    function startTypewriter(tab) {
+        const el = document.getElementById(`typewriter-${tab}`);
+        // Cek jika elemen ada (untuk menghindari error null)
+        if(!el) return;
+        
+        const text = texts[tab];
+        el.innerHTML = ""; 
+        clearInterval(typeInterval);
+        
+        let i=0; 
+        typeInterval = setInterval(()=>{ 
+            if(i < text.length) {
+                el.innerHTML += text.charAt(i);
+                i++;
+            } else {
+                clearInterval(typeInterval);
+            }
+        }, 20); // Kecepatan ketik 20ms
+    }
+    
+    // --- 2. PREVIEW IMAGE & SCAN LOGIC ---
+    function previewImage(input) {
+        if(input.files && input.files[0]){
+            var reader = new FileReader();
+            reader.onload = function(e){
+                // Tampilkan container HUD & Gambar
+                const previewImg = document.getElementById('preview');
+                previewImg.src = e.target.result;
+                
+                // Aktifkan tampilan HUD jika ada (untuk Ide 1)
+                const hudContainer = document.querySelector('.hud-container');
+                if(hudContainer) hudContainer.style.display = 'block';
+                
+                // Sembunyikan placeholder
+                document.getElementById('placeholder').style.display='none';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function initiateScan() {
+        if(document.getElementById('fileInput').files.length === 0){
+            alert("NO IMAGE DETECTED");
+            return;
+        }
+        // Efek UI saat scanning
+        const scanContainer = document.querySelector('.scan-container');
+        if(scanContainer) scanContainer.classList.add('scanning');
+        
+        document.querySelector('.btn-cyber').innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESSING...';
+        
+        // Submit form setelah delay (efek dramatis)
+        setTimeout(() => {
+            document.getElementById('scanForm').submit();
+        }, 1500);
+    }
+
+    // --- 3. MODAL ZOOM FUNCTION ---
+    function openModal(src, title) {
+        document.getElementById('modalImage').src = src;
+        document.getElementById('modalLabel').innerText = title;
+        new bootstrap.Modal(document.getElementById('imageModal')).show();
+    }
+
+    // --- 4. WOW FACTOR: VOICE BRIEFING (ASISTEN SUARA) ---
+    function speakAnalysis(text) {
+        if ('speechSynthesis' in window) {
+            // Hentikan suara lama
+            window.speechSynthesis.cancel(); 
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID'; // Bahasa Indonesia
+            utterance.rate = 1.1;     // Kecepatan sedikit cepat (Taktis)
+            utterance.pitch = 0.9;    // Nada sedikit rendah (Berwibawa)
+            
+            // Coba cari suara spesifik ID jika ada
+            const voices = window.speechSynthesis.getVoices();
+            const idVoice = voices.find(v => v.lang.includes('id'));
+            if (idVoice) utterance.voice = idVoice;
+            
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    // --- 5. ON LOAD EVENTS ---
+    document.addEventListener("DOMContentLoaded", () => {
+        // Mulai ketik text tab pertama
+        startTypewriter('scan');
+        
+        // Cek apakah ada hasil analisis di layar untuk memicu suara
+        const resultBox = document.querySelector('.brand-font.text-white.mb-0.text-cyan');
+        if(resultBox) {
+            // Ambil nama awan (yang sudah diterjemahkan ke Indo oleh Jinja2)
+            const cloudName = resultBox.innerText;
+            
+            // Ambil teks rekomendasi (bersihkan tanda kutip)
+            const recTextElement = document.querySelector('p[style*="Share Tech Mono"]');
+            if(recTextElement) {
+                const recText = recTextElement.innerText.replace(/"/g, '');
+                
+                // Susun kalimat briefing
+                const briefing = `Laporan masuk. Terdeteksi ${cloudName}. Rekomendasi Operasional: ${recText}`;
+                
+                // Eksekusi suara dengan jeda 1.5 detik
+                setTimeout(() => speakAnalysis(briefing), 1500);
+            }
+        }
+    });
+
+    // --- 6. BACKGROUND ANIMATION (NEURAL NETWORK EFFECT) ---
+    const canvas = document.getElementById('neuronCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Resize canvas otomatis
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    let p = []; 
+    class Part {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5);
+            this.vy = (Math.random() - 0.5);
+        }
+    }
+    
+    function init() {
+        p = [];
+        for(let i=0; i<80; i++) p.push(new Part());
+    }
+    
+    function anim() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        p.forEach((a, i) => {
+            a.x += a.vx;
+            a.y += a.vy;
+            
+            // Pantulan dinding
+            if(a.x < 0 || a.x > canvas.width) a.vx *= -1;
+            if(a.y < 0 || a.y > canvas.height) a.vy *= -1;
+            
+            // Gambar titik
+            ctx.beginPath();
+            ctx.arc(a.x, a.y, 2, 0, 7);
+            ctx.fillStyle = '#00f2ff';
+            ctx.fill();
+            
+            // Gambar garis penghubung jika dekat
+            p.slice(i+1).forEach(b => {
+                let d = Math.hypot(a.x - b.x, a.y - b.y);
+                if(d < 150) {
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a.y);
+                    ctx.lineTo(b.x, b.y);
+                    ctx.strokeStyle = `rgba(0, 242, 255, ${1 - d/150})`;
+                    ctx.stroke();
+                }
+            });
+        });
+        requestAnimationFrame(anim);
+    }
+    
+    window.onresize = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        init();
+    };
+    
+    init();
+    anim();
+</script>

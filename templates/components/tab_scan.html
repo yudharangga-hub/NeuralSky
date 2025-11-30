@@ -1,0 +1,157 @@
+<div class="tab-pane fade show active" id="pills-scan">
+    <div class="cyber-box"><span id="typewriter-scan"></span><span class="cursor"></span></div>
+
+    <div class="row g-5">
+        <div class="col-lg-5">
+            <div class="hud-panel p-4 h-100">
+                <h4 class="brand-font text-cyan mb-4">INPUT STREAM</h4>
+                <form action="/" method="post" enctype="multipart/form-data" id="scanForm">
+                    <div class="scan-container mb-4" onclick="document.getElementById('fileInput').click();">
+                        <div class="neural-grid"></div>
+                        
+                        <div id="placeholder" class="text-center" style="display: {{ 'none' if image_file else 'block' }}; z-index: 2;">
+                            <i class="fas fa-cloud-upload-alt fa-5x text-cyan mb-4"></i>
+                            <h5 class="brand-font text-white">CLICK TO UPLOAD</h5>
+                            <p class="tech-font text-dim small">JPG/PNG (AUTO-RESIZE)</p>
+                        </div>
+                        
+                        {% if image_file %}
+                        <div class="hud-container" style="width: 100%; height: 100%; position: absolute;">
+                            <div class="hud-overlay">
+                                <div class="scan-line"></div>
+                                <div class="crosshair"></div>
+                                <div class="hud-status">SYSTEM: ONLINE<br>TRACKING: ACTIVE</div>
+                            </div>
+                            <img id="preview" src="{{ image_file }}" style="width: 100%; height: 100%; object-fit: contain; z-index: 1;">
+                        </div>
+                        {% else %}
+                            <img id="preview" src="" style="max-width: 100%; max-height: 100%; display: none; z-index: 3;">
+                        {% endif %}
+                        
+                        <input type="file" name="file" id="fileInput" hidden onchange="previewImage(this)">
+                    </div>
+                    <button type="button" onclick="initiateScan()" class="btn-cyber">INITIATE ANALYSIS</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            {% if results %}
+                <div class="hud-panel p-5">
+                    <div class="d-flex flex-wrap justify-content-between align-items-end mb-5 pb-4 border-bottom border-dark">
+                        <div class="me-3 mb-2" style="flex: 1; min-width: 250px;">
+                            <small class="text-dim tech-font">IDENTIFIED MORPHOLOGY:</small>
+                            <h1 class="brand-font text-white mb-0 text-cyan text-uppercase" 
+                                style="text-shadow: 0 0 20px var(--neon-cyan); font-size: 3rem; line-height: 1.1; word-wrap: break-word;">
+                                {% if impact_info %}{{ impact_info.nama_indo }}{% else %}{{ final_decision.class }}{% endif %}
+                            </h1>
+                        </div>
+                        <div class="text-end mb-2">
+                            <div class="brand-font text-purple fw-bold" 
+                                 style="text-shadow: 0 0 20px var(--neon-purple); font-size: 4rem;">
+                                {{ final_decision.confidence }}<span style="font-size: 2rem;">%</span>
+                            </div>
+                            <small class="text-dim tech-font">PROBABILITY</small>
+                        </div>
+                    </div>
+
+                    {% for res in results %}
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-end mb-2">
+                            <span class="brand-font fs-5 text-white"><i class="fas fa-caret-right text-cyan me-2"></i>{{ res.model }}</span>
+                            <span class="tech-font text-dim text-uppercase">{{ res.latency }}ms | Pred: {{ res.prediction }}</span>
+                        </div>
+                        <div class="bar-track"><div class="bar-fill" style="width: {{ res.confidence }}%;"></div></div>
+                    </div>
+                    {% endfor %}
+
+                    {% if impact_info %}
+                    
+                    <div class="mt-5 mb-4 p-3 border border-secondary bg-black bg-opacity-50 rounded">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <small class="tech-font text-cyan">CLOUD COVERAGE (DENSITY)</small>
+                                <i class="fas fa-info-circle ms-2 text-secondary" style="cursor: pointer;" onclick="new bootstrap.Modal(document.getElementById('oktasModal')).show()"></i>
+                            </div>
+                            <span class="brand-font text-white">{{ oktas_val }}/8 OKTAS ({{ cloud_coverage }}%)</span>
+                        </div>
+                        <div class="progress" style="height: 10px; background-color: #1a1a1a;">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: {{ cloud_coverage }}%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); box-shadow: 0 0 10px var(--neon-cyan);" 
+                                 aria-valuenow="{{ cloud_coverage }}" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1 tech-font" style="font-size: 0.65rem; color: #555;">
+                            <span>SKC (0)</span><span>FEW (1-2)</span><span>SCT (3-4)</span><span>BKN (5-7)</span><span>OVC (8)</span>
+                        </div>
+                    </div>
+
+                    <div class="p-4" style="background: rgba(0, 20, 40, 0.6); border-left: 3px solid var(--neon-cyan); border-radius: 0 10px 10px 0;">
+                        <h5 class="brand-font text-cyan mb-3"><i class="fas fa-info-circle me-2"></i>TACTICAL ANALYSIS</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <small class="tech-font text-dim">RISIKO PENERBANGAN</small>
+                                <div class="fw-bold text-white mt-1" style="font-family: 'Orbitron'; letter-spacing: 1px;">
+                                    {% if 'BAHAYA' in impact_info.risiko_penerbangan %}
+                                        <span style="color: #ff3333; text-shadow: 0 0 10px red;"><i class="fas fa-exclamation-triangle me-2"></i>{{ impact_info.risiko_penerbangan }}</span>
+                                    {% elif 'AMAN' in impact_info.risiko_penerbangan %}
+                                        <span style="color: #00ff00; text-shadow: 0 0 10px lime;"><i class="fas fa-check-circle me-2"></i>{{ impact_info.risiko_penerbangan }}</span>
+                                    {% else %}
+                                        <span class="text-warning"><i class="fas fa-exclamation-circle me-2"></i>{{ impact_info.risiko_penerbangan }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="tech-font text-dim">POTENSI HUJAN</small>
+                                <div class="tech-font text-white mt-1">{{ impact_info.potensi_hujan }}</div>
+                            </div>
+                            <div class="col-md-12">
+                                <small class="tech-font text-dim">VISIBILITAS</small>
+                                <div class="tech-font text-white mt-1">{{ impact_info.visibilitas }}</div>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <div class="p-3" style="border: 1px dashed rgba(255,255,255,0.2); background: rgba(255,255,255,0.05);">
+                                    <small class="tech-font text-cyan">REKOMENDASI OPERASIONAL:</small>
+                                    <p class="mb-0 mt-2 text-white" style="font-family: 'Share Tech Mono'; line-height: 1.4;">"{{ impact_info.rekomendasi }}"</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if report_active %}
+                    <div class="mt-4 pt-4 border-top border-dark">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-user-check text-cyan me-2"></i>
+                            <span class="tech-font text-dim">VERIFIKASI MANUAL SEBELUM EKSPOR:</span>
+                        </div>
+                        <form action="/generate_report" method="POST" target="_blank">
+                            <input type="hidden" name="filename" value="{{ image_file.split('/')[-1] }}">
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary text-dim tech-font">FINAL DECISION:</span>
+                                <select name="corrected_class" class="form-select bg-black text-white border-secondary brand-font" style="letter-spacing: 1px;">
+                                    {% for name in class_names %}
+                                        <option value="{{ name }}" {% if name == final_decision.class %}selected{% endif %}>
+                                            {{ name|upper }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn btn-cyber px-4" style="width: auto; border-radius: 0 5px 5px 0;">
+                                    <i class="fas fa-file-pdf me-2"></i>CETAK LAPORAN
+                                </button>
+                            </div>
+                            <small class="text-muted tech-font">*Jika AI salah, silakan ubah jenis awan pada menu di atas sebelum mencetak.</small>
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="hud-panel p-5 text-center h-100 d-flex flex-column justify-content-center opacity-75">
+                    <i class="fas fa-microchip fa-6x mb-4 text-cyan fa-spin" style="animation-duration: 5s;"></i>
+                    <h2 class="brand-font text-white">SYSTEM STANDBY</h2>
+                    <p class="tech-font text-dim fs-5">Awaiting visual input...</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

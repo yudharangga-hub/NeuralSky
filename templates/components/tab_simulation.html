@@ -1,0 +1,67 @@
+<div class="tab-pane fade" id="pills-simulation">
+    <div class="cyber-box"><span id="typewriter-simulation"></span><span class="cursor"></span></div>
+
+    <div class="hud-panel p-5">
+        
+        {% if impact_info %}
+        <div class="text-center mb-5">
+            <h3 class="brand-font text-cyan">T+1 HOUR PROJECTION</h3>
+            <p class="tech-font text-dim">Simulasi perkembangan cuaca berbasis morfologi awan saat ini.</p>
+        </div>
+
+        <div class="position-relative my-5" style="height: 100px;">
+            <div class="position-absolute top-50 start-0 w-100" style="height: 2px; background: rgba(255,255,255,0.2); transform: translateY(-50%);"></div>
+            
+            <div class="position-absolute top-50 start-0 translate-middle-y text-center" style="width: 150px;">
+                <div class="bg-black border border-cyan rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 40px; height: 40px; box-shadow: 0 0 15px var(--neon-cyan);">
+                    <i class="fas fa-camera text-cyan"></i>
+                </div>
+                <small class="tech-font text-white">SEKARANG</small>
+            </div>
+
+            <div class="position-absolute top-50 start-50 translate-middle text-center">
+                <i class="fas fa-angle-double-right text-dim fa-2x animate-flicker"></i>
+            </div>
+
+            <div class="position-absolute top-50 end-0 translate-middle-y text-center" style="width: 150px;">
+                <div class="bg-black border border-purple rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 40px; height: 40px; box-shadow: 0 0 15px var(--neon-purple);">
+                    <i class="fas fa-clock text-purple"></i>
+                </div>
+                <small class="tech-font text-white">ESTIMASI T+1 JAM</small>
+            </div>
+        </div>
+
+        <div class="p-4 mt-4" style="background: linear-gradient(90deg, rgba(0,0,0,0.8), rgba(20, 20, 40, 0.8)); border-left: 4px solid var(--neon-purple); border-radius: 0 10px 10px 0;">
+            <div class="d-flex align-items-start">
+                <i class="fas fa-robot text-purple fa-2x me-3 mt-1"></i>
+                <div>
+                    <h5 class="brand-font text-white mb-2">AI PREDICTIVE MODEL:</h5>
+                    <p class="tech-font text-cyan fs-5 mb-0" style="line-height: 1.5;">
+                        "{{ impact_info.simulasi }}"
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 text-center opacity-50">
+            <small class="tech-font text-dim" style="font-size: 0.7rem; font-style: italic;">
+                *DISCLAIMER: Proyeksi ini disusun menggunakan pendekatan <b>Expert System (Rule-Based)</b> berdasarkan karakteristik fisik morfologi awan menurut literatur meteorologi standar. 
+                Hasil ini adalah estimasi teoritis dan <b>tidak menggantikan</b> prakiraan cuaca numerik (NWP) resmi BMKG yang menggunakan data sensor multi-variabel (Suhu, Angin, Kelembapan).
+            </small>
+        </div>
+
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-hourglass-half fa-3x text-secondary mb-3"></i>
+            <h5 class="text-dim brand-font">AWAITING INPUT DATA</h5>
+            <p class="tech-font">Lakukan scanning untuk menjalankan simulasi.</p>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<style>
+    .animate-flicker { animation: flicker 1.5s infinite alternate; }
+    @keyframes flicker { 0% { opacity: 0.2; } 100% { opacity: 1; text-shadow: 0 0 10px white; } }
+</style>

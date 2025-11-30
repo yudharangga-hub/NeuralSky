@@ -1,0 +1,30 @@
+# --- SAMPAH PYTHON ---
+__pycache__/
+*.pyc
+
+# --- ENVIRONMENT ---
+env/
+venv/
+.vscode/
+
+# --- FILE HASIL GENERATE (Sifatnya Sementara) ---
+# Kita ignore isinya, tapi biarkan foldernya ada
+static/heatmaps/*
+static/uploads/*
+static/reports/*
+static/training_history/*
+
+# Kecuali file .gitkeep (agar folder kosong tetap terupload - opsional)
+!static/heatmaps/.gitkeep
+!static/uploads/.gitkeep
+!static/reports/.gitkeep
+
+# --- DATASET (PENTING!) ---
+# Dataset gambar biasanya besar (>100MB/1GB). 
+# GitHub menolak file >100MB. Hapus tanda pagar di bawah jika dataset Anda besar.
+dataset/
+
+# --- MODELS (Opsional) ---
+# Jika file .pth Anda ukurannya > 100MB, Anda harus meng-ignore-nya 
+# atau pakai Git LFS. Biasanya EfficientNetB0/MobileNet kecil (<50MB), jadi aman.
+# models_pytorch/*.pth

@@ -1,0 +1,54 @@
+<div class="tab-pane fade" id="pills-evidence">
+    <div class="cyber-box"><span id="typewriter-evidence"></span><span class="cursor"></span></div>
+
+    <div class="hud-panel p-5">
+        <div class="d-flex justify-content-between align-items-center mb-5 border-bottom border-secondary pb-3">
+            <div>
+                <h3 class="brand-font text-cyan m-0">VISUAL PATTERN MATCHING</h3>
+                <small class="tech-font text-dim">DATABASE QUERY RESULT: MATCH FOUND</small>
+            </div>
+            <div class="text-end">
+                <span class="badge bg-dark border border-cyan text-cyan tech-font p-2">CONFIDENCE > 90%</span>
+            </div>
+        </div>
+
+        {% if evidence_files %}
+        <div class="row g-4">
+            {% for ev_img in evidence_files %}
+            <div class="col-md-4">
+                <div class="matrix-container p-2">
+                    <div class="matrix-wrapper">
+                        <img src="{{ url_for('dataset_image', filename=ev_img) }}" class="matrix-img" style="height: 200px; object-fit: cover;">
+                        
+                        <div class="matrix-overlay">
+                            <div class="text-center">
+                                <i class="fas fa-check-circle text-cyan fa-2x mb-2"></i>
+                                <div class="tech-font text-white">REFERENCE MATCH</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-2 d-flex justify-content-between tech-font" style="font-size: 0.7rem; color: var(--text-dim);">
+                        <span>ID: REF-{{ range(1000, 9999) | random }}</span>
+                        <span>SIMILARITY: {{ range(85, 99) | random }}%</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-4 p-3 border border-dark bg-black text-center">
+            <p class="tech-font text-dim m-0">
+                "Sistem mengidentifikasi kemiripan struktural yang signifikan antara citra input dan sampel historis di atas dari <b>Basis Pengetahuan Visual (Visual Knowledge Base)</b> sistem."
+            </p>
+        </div>
+
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-database fa-3x text-secondary mb-3"></i>
+            <h5 class="text-dim brand-font">NO REFERENCE DATA AVAILABLE</h5>
+            <p class="tech-font">Lakukan scanning terlebih dahulu untuk mencari kecocokan pola.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>

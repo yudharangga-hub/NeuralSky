@@ -1,0 +1,48 @@
+<div class="tab-pane fade" id="pills-xray">
+    <div class="cyber-box"><span id="typewriter-xray"></span><span class="cursor"></span></div>
+
+    <div class="hud-panel p-5">
+        <div class="text-center mb-5">
+            <h3 class="brand-font text-cyan">ATTENTION MAP (GRAD-CAM)</h3>
+            <p class="tech-font text-dim">Visualisasi area fokus model dalam menentukan klasifikasi awan.</p>
+        </div>
+
+        {% if heatmap_data %}
+        <div class="row g-5 justify-content-center">
+            {% for model_name, data in heatmap_data.items() %}
+            <div class="col-md-5">
+                <div class="matrix-container p-0" style="overflow: hidden; border: 1px solid var(--neon-cyan);">
+                    <div class="p-3 border-bottom border-secondary bg-black">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="brand-font text-white m-0">{{ model_name }}</h5>
+                                <div class="tech-font text-cyan mt-1" style="font-size: 0.95rem; letter-spacing: 1px;">
+                                    <i class="fas fa-tag me-1"></i>PRED: <b class="text-uppercase">{{ data.pred }}</b>
+                                </div>
+                            </div>
+                            <span class="badge heat-badge">{{ data.conf }}%</span>
+                        </div>
+                    </div>
+                    <div class="matrix-wrapper" onclick="openModal('{{ data.img }}', '{{ model_name }} Heatmap')">
+                        <img src="{{ data.img }}" class="matrix-img">
+                        <div class="matrix-overlay"><i class="fas fa-search-plus zoom-icon"></i></div>
+                    </div>
+                    <div class="p-3 border-top border-secondary" style="background: rgba(0, 242, 255, 0.05);">
+                        <p class="tech-font text-dim m-0" style="font-size: 0.8rem; line-height: 1.4;">
+                            <span class="text-cyan fw-bold">ANALISA AI:</span> 
+                            Area berwarna <span style="color: #ff3333; font-weight: bold;">Merah/Kuning</span> menunjukkan fitur visual dominan yang dikenali sebagai pola <span class="text-white">{{ data.pred }}</span>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="py-5 text-center text-dim">
+            <i class="fas fa-eye-slash fa-4x mb-4 opacity-50"></i>
+            <h4>NO VISUALIZATION DATA</h4>
+            <p>Silakan lakukan scan gambar terlebih dahulu.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEURAL SKY :: BMKG AI</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/hud_style.css') }}">
+
+    {% include 'components/css_styles.html' %}
+</head>
+<body>
+
+    <canvas id="neuronCanvas"></canvas>
+
+    <div class="border-bottom border-dark bg-black bg-opacity-75 py-3 mb-5 shadow-lg">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                
+                <div class="d-flex align-items-center">
+                    <img src="{{ url_for('static', filename='images/logo_unpam.png') }}" class="logo-header me-3" alt="Logo UNPAM">
+                </div>
+
+                <div class="text-center flex-grow-1 mx-3">
+                    <h2 class="m-0 text-white brand-font" style="text-shadow: 0 0 15px var(--neon-cyan);">NEURAL SKY <span class="text-cyan fs-5">// BMKG AI</span></h2>
+                    <div class="researcher-info tech-font d-none d-md-block">
+                        <span class="researcher-name">Yudha Rangga WP</span> | NIM: 241012000151<br>
+                        Prodi Magister Teknik Informatika - Universitas Pamulang
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center flex-column">
+                    <img src="{{ url_for('static', filename='images/logo_bmkg.png') }}" class="logo-header mb-2" alt="Logo BMKG">
+                    <div class="tech-font text-cyan" style="font-size: 0.7rem;">
+                        STATUS: <span class="status-indicator" style="padding: 2px 8px; font-size: 0.7rem;">ONLINE</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <ul class="nav nav-pills mb-5 justify-content-center nav-fill" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active py-3" data-bs-toggle="pill" data-bs-target="#pills-scan" onclick="startTypewriter('scan')">
+                    <i class="fas fa-satellite-dish me-2"></i>TARGET SCAN
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link py-3 position-relative" data-bs-toggle="pill" data-bs-target="#pills-xray" onclick="startTypewriter('xray')">
+                    <i class="fas fa-eye me-2"></i>NEURAL VISION
+                    {% if heatmap_data %}<span class="position-absolute top-0 start-100 translate-middle p-1 bg-cyan border border-light rounded-circle" style="box-shadow: 0 0 10px var(--neon-cyan);"></span>{% endif %}
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link py-3" data-bs-toggle="pill" data-bs-target="#pills-evidence" onclick="startTypewriter('evidence')">
+                    <i class="fas fa-search-location me-2"></i>FORENSIC
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link py-3" data-bs-toggle="pill" data-bs-target="#pills-simulation" onclick="startTypewriter('simulation')">
+                    <i class="fas fa-clock me-2"></i>SIMULATION
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link py-3" data-bs-toggle="pill" data-bs-target="#pills-data" onclick="startTypewriter('data')">
+                    <i class="fas fa-chart-bar me-2"></i>LAB METRICS
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            {% include 'components/tab_scan.html' %}       {% include 'components/tab_xray.html' %}       {% include 'components/tab_evidence.html' %}   {% include 'components/tab_simulation.html' %} {% include 'components/tab_metrics.html' %}    </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            &copy; 2025 - UNIVERSITAS PAMULANG<br>
+            Developed by Yudha Rangga WP - Magister Teknik Informatika
+        </div>
+    </footer>
+
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content" style="background: #050a10; border: 1px solid var(--neon-cyan);">
+                <div class="modal-header" style="border-bottom: 1px solid var(--neon-cyan);">
+                    <h5 class="modal-title brand-font text-cyan" id="modalLabel">DETAILS</h5>
+                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-1 text-center"><img id="modalImage" src="" class="img-fluid"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="oktasModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background: #050a10; border: 1px solid var(--neon-cyan); box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title brand-font text-cyan"><i class="fas fa-book me-2"></i>SKALA OKTAS (CLOUD COVER)</h5>
+                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body tech-font text-white">
+                    <p class="small text-dim">Standar pengukuran tutupan awan dalam meteorologi penerbangan (METAR).</p>
+                    <table class="table table-dark table-striped table-bordered" style="font-size: 0.85rem; border-color: #333;">
+                        <thead>
+                            <tr class="text-cyan">
+                                <th>KODE</th>
+                                <th>OKTAS</th>
+                                <th>KETERANGAN</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="fw-bold text-success">SKC</td>
+                                <td>0</td>
+                                <td>Langit Bersih (Sky Clear)</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold text-info">FEW</td>
+                                <td>1 - 2</td>
+                                <td>Sedikit Berawan</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold text-warning">SCT</td>
+                                <td>3 - 4</td>
+                                <td>Berawan Sebagian (Scattered)</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold" style="color: orange;">BKN</td>
+                                <td>5 - 7</td>
+                                <td>Berawan Banyak (Broken)</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold text-danger">OVC</td>
+                                <td>8</td>
+                                <td>Mendung Total (Overcast)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="mt-3 p-2 border border-secondary rounded bg-black">
+                        <small class="text-dim">
+                            <i class="fas fa-microchip me-1"></i> 
+                            Nilai dihitung menggunakan algoritma <b>Computer Vision Thresholding</b> pada citra input untuk memisahkan piksel awan dan langit.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% include 'components/scripts.html' %}
+
+</body>
+</html>

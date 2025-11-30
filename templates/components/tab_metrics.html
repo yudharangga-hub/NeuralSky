@@ -1,0 +1,93 @@
+<div class="tab-pane fade" id="pills-data">
+    <div class="cyber-box"><span id="typewriter-data"></span><span class="cursor"></span></div>
+
+    <div class="hud-panel p-5">
+        <h3 class="brand-font text-purple mb-4">MODEL PERFORMANCE METRICS</h3>
+
+        <p class="tech-font text-dim mb-5" style="max-width: 800px; border-left: 2px solid var(--neon-purple); padding-left: 15px;">
+            <i class="fas fa-info-circle text-purple me-2"></i>
+            <b>RINGKASAN PERFORMA:</b> Indikator kesehatan model secara global. <span class="text-cyan">Avg Precision</span> menunjukkan rata-rata ketepatan prediksi di semua kelas. <span class="text-purple">Min Loss</span> adalah tingkat kesalahan terendah.
+        </p>
+
+        <div class="row mb-5 g-4 text-center">
+            <div class="col-md-4"><div class="hud-panel p-4"><h2 class="text-white brand-font display-4">1,240</h2><small class="text-dim tech-font">TOTAL SAMPLES</small></div></div>
+            <div class="col-md-4"><div class="hud-panel p-4"><h2 class="text-cyan brand-font display-4" style="text-shadow: 0 0 15px var(--neon-cyan);">86.8%</h2><small class="text-dim tech-font">AVG PRECISION</small></div></div>
+            <div class="col-md-4"><div class="hud-panel p-4"><h2 class="text-purple brand-font display-4" style="text-shadow: 0 0 15px var(--neon-purple);">0.29</h2><small class="text-dim tech-font">MIN LOSS</small></div></div>
+        </div>
+
+        <div class="border-top border-dark pt-5 mb-4">
+            <h4 class="brand-font text-cyan mb-3">CONFUSION MATRIX ANALYSIS</h4>
+            <div class="tech-font text-dim p-3" style="background: rgba(0, 242, 255, 0.05); border-radius: 10px; max-width: 900px;">
+                <p class="mb-2"><i class="fas fa-project-diagram me-2"></i>Matriks ini memetakan hubungan antara <b>Kebenaran (True Label, sumbu Y)</b> versus <b>Prediksi AI (Predicted Label, sumbu X)</b>.</p>
+                <ul class="mb-0" style="list-style: none; padding-left: 15px;">
+                    <li class="mb-1"><span style="color: var(--neon-cyan); font-weight: bold;">■ Diagonal Utama:</span> Prediksi BENAR.</li>
+                    <li><span style="color: #ff5555; font-weight: bold;">■ Area Lain:</span> KESALAHAN (Misklasifikasi).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row g-5 mb-5">
+            <div class="col-md-4">
+                <div class="matrix-container">
+                    <h6 class="text-center tech-font text-cyan mb-3">SIMPLE CNN</h6>
+                    <div class="matrix-wrapper" onclick="openModal('{{ url_for('static', filename='confusion_simple_cnn_v2.png') }}', 'Simple CNN Matrix')">
+                        <img src="{{ url_for('static', filename='confusion_simple_cnn_v2.png') }}?t={{ range(1, 1000) | random }}" class="matrix-img" onerror="this.style.display='none'">
+                        <div class="matrix-overlay"><i class="fas fa-search-plus zoom-icon"></i><div class="click-hint tech-font text-cyan mt-2">PERBESAR</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="matrix-container">
+                    <h6 class="text-center tech-font text-cyan mb-3">MOBILENET V2</h6>
+                    <div class="matrix-wrapper" onclick="openModal('{{ url_for('static', filename='confusion_mobilenet_finetuned.png') }}', 'MobileNet Matrix')">
+                        <img src="{{ url_for('static', filename='confusion_mobilenet_finetuned.png') }}?t={{ range(1, 1000) | random }}" class="matrix-img" onerror="this.style.display='none'">
+                        <div class="matrix-overlay"><i class="fas fa-search-plus zoom-icon"></i><div class="click-hint tech-font text-cyan mt-2">PERBESAR</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="matrix-container">
+                    <h6 class="text-center tech-font text-cyan mb-3">EFFICIENTNET B0</h6>
+                    <div class="matrix-wrapper" onclick="openModal('{{ url_for('static', filename='confusion_efficientnet_finetuned.png') }}', 'EfficientNet Matrix')">
+                        <img src="{{ url_for('static', filename='confusion_efficientnet_finetuned.png') }}?t={{ range(1, 1000) | random }}" class="matrix-img" onerror="this.style.display='none'">
+                        <div class="matrix-overlay"><i class="fas fa-search-plus zoom-icon"></i><div class="click-hint tech-font text-cyan mt-2">PERBESAR</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5 pt-5 border-top border-dark">
+            <h3 class="brand-font text-cyan mb-3">NEURAL TRAINING LOGS (EPOCH HISTORY)</h3>
+            <div class="row g-5">
+                <div class="col-md-4">
+                    <div class="matrix-container">
+                        <div class="d-flex justify-content-between mb-2"><h6 class="tech-font text-muted m-0">SIMPLE CNN</h6><span class="badge bg-dark border border-secondary text-dim">LOG: COMPLETED</span></div>
+                        <div class="matrix-wrapper" onclick="openModal('{{ url_for('static', filename='training_history/simple_cnn_chart.png') }}', 'Simple CNN History')">
+                            <img src="{{ url_for('static', filename='training_history/simple_cnn_chart.png') }}" class="matrix-img digital-chart" onerror="this.src='https://placehold.co/600x400/000/00f2ff?text=NO+DATA'">
+                            <div class="matrix-overlay"><i class="fas fa-chart-line zoom-icon"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="matrix-container">
+                        <div class="d-flex justify-content-between mb-2"><h6 class="tech-font text-cyan m-0">MOBILENET V2</h6><span class="badge bg-dark border border-cyan text-cyan">LOG: OPTIMIZED</span></div>
+                        <div class="matrix-wrapper" onclick="openModal('{{ url_for('static', filename='training_history/mobilenet_chart.png') }}', 'MobileNet History')">
+                            <img src="{{ url_for('static', filename='training_history/mobilenet_chart.png') }}" class="matrix-img digital-chart" onerror="this.src='https://placehold.co/600x400/000/00f2ff?text=NO+DATA'">
+                            <div class="matrix-overlay"><i class="fas fa-chart-line zoom-icon"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="matrix-container">
+                        <div class="d-flex justify-content-between mb-2"><h6 class="tech-font text-purple m-0">EFFICIENTNET B0</h6><span class="badge bg-dark border border-purple text-purple">LOG: HIGH PRECISION</span></div>
+                        <div class="matrix-wrapper" onclick="openModal('{{ url_for('static', filename='training_history/efficientnet_chart.png') }}', 'EfficientNet History')">
+                            <img src="{{ url_for('static', filename='training_history/efficientnet_chart.png') }}" class="matrix-img digital-chart" onerror="this.src='https://placehold.co/600x400/000/00f2ff?text=NO+DATA'">
+                            <div class="matrix-overlay"><i class="fas fa-chart-line zoom-icon"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

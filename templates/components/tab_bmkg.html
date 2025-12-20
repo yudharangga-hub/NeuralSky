@@ -1,0 +1,134 @@
+<div class="hud-panel p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-dark pb-3">
+        <div class="d-flex align-items-center">
+            <div class="me-4">
+                <h3 class="brand-font text-cyan m-0"><i class="fas fa-globe-asia me-2"></i>OFFICIAL BMKG DATA FEED</h3>
+                <small class="tech-font text-dim">LIVE CONNECTION: API.BMKG.GO.ID</small>
+            </div>
+            
+            <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-cyan tech-font"><i class="fas fa-map-marked-alt"></i></span>
+                <select id="lokasiSelector" class="form-select bg-black text-white border-secondary brand-font" 
+                        onchange="changeLocation(this.value)" style="max-width: 250px;">
+                    {% for kode, nama in daftar_wilayah.items() %}
+                        <option value="{{ kode }}" {% if kode == current_kode %}selected{% endif %}>
+                            {{ nama }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="text-end">
+            <span class="badge bg-black border border-success text-success tech-font blink-text"><i class="fas fa-wifi me-1"></i>STREAM ACTIVE</span>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="p-3 border border-secondary bg-black bg-opacity-50 rounded h-100 d-flex flex-column">
+                
+                <h5 class="text-white brand-font border-bottom border-secondary pb-2 mb-3">
+                    <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                    {% if lokasi.desa %}LOKASI: {{ lokasi.desa|upper }}{% else %}DATA LOKASI{% endif %}
+                    <span class="float-end tech-font text-dim" style="font-size: 0.7rem; margin-top: 3px;">
+                        KEC: {{ lokasi.kecamatan }}
+                    </span>
+                </h5>
+
+                <div class="forecast-scroll mb-3 flex-grow-1" style="max-height: 320px; overflow-y: auto; padding-right: 5px;">
+                    {% if forecasts %}
+                        {% for item in forecasts %}
+                        <div class="d-flex align-items-center justify-content-between p-2 mb-2 border border-dark rounded bg-black hover-glow" style="transition: 0.3s;">
+                            <div class="text-white tech-font text-center me-2">
+                                <span class="badge bg-dark border border-secondary d-block mb-1 text-dim" style="font-size: 0.6rem;">{{ item.local_datetime[:10] }}</span>
+                                <span class="fs-5 fw-bold text-cyan">{{ item.local_datetime[11:16] }}</span>
+                            </div>
+                            <div class="text-center flex-grow-1 border-start border-end border-dark px-2">
+                                <img src="{{ item.image }}" alt="Icon" style="width: 40px; filter: drop-shadow(0 0 3px white);">
+                                <div class="small text-white mt-1 tech-font text-uppercase" style="font-size: 0.7rem;">{{ item.weather_desc }}</div>
+                            </div>
+                            <div class="text-end tech-font text-dim small ms-2" style="font-size: 0.75rem; min-width: 70px;">
+                                <div><i class="fas fa-temperature-high text-warning me-1"></i>{{ item.t }}°C</div>
+                                <div><i class="fas fa-tint text-primary me-1"></i>{{ item.hu }}%</div>
+                                <div><i class="fas fa-wind text-secondary me-1"></i>{{ item.ws }}km/h</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5 text-muted">
+                            <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                            <p>Gagal memuat data.</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="mt-auto p-3 border border-dark bg-black rounded" style="min-height: 120px;">
+                    <small class="tech-font text-warning fw-bold mb-2 d-block">
+                        <i class="fas fa-microchip me-2"></i>SPESIFIKASI DATA SATELIT (GK2A):
+                    </small>
+                    <p class="tech-font text-dim m-0" style="font-size: 0.75rem; text-align: justify; line-height: 1.4;">
+                        Produk <b>GK2A Enhanced</b> memvisualisasikan suhu puncak awan dari radiasi gelombang 10.4µm. 
+                        Warna <span class="text-info fw-bold">Hitam/Biru</span> menandakan area cerah/minim awan. 
+                        Sebaliknya, warna <span class="text-danger fw-bold">Jingga/Merah</span> (suhu dingin) mengindikasikan 
+                        pertumbuhan awan vertikal yang signifikan, berpotensi menjadi <b>Cumulonimbus</b>.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="p-3 border border-secondary bg-black bg-opacity-50 rounded h-100 d-flex flex-column">
+                
+                <h5 class="text-white brand-font border-bottom border-secondary pb-2 mb-3">
+                    <i class="fas fa-satellite me-2 text-purple"></i>REAL-TIME SATELLITE (HIMAWARI-9)
+                </h5>
+                
+                <div class="ratio ratio-4x3 border border-dark position-relative overflow-hidden mb-3 bg-dark rounded shadow-lg" 
+                     style="cursor: pointer;" 
+                     onclick="openModal('{{ satellite }}', 'SATELLITE HIMAWARI-9 (IR ENHANCED)')">
+                    <img src="{{ satellite }}" class="img-fluid object-fit-cover" alt="Citra Satelit" 
+                         onerror="this.src='https://placehold.co/600x400/000/FFF?text=SATELLITE+OFFLINE'">
+                    
+                    <div class="position-absolute top-0 start-0 w-100 h-100 pointer-events-none" 
+                         style="background: repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(0, 242, 255, 0.1) 50px),
+                                repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(0, 242, 255, 0.1) 50px);">
+                    </div>
+                    
+                    <div class="position-absolute top-0 end-0 m-2">
+                        <span class="badge bg-danger animate-pulse">LIVE FEED</span>
+                    </div>
+                    <div class="position-absolute bottom-0 end-0 m-2 text-cyan opacity-50">
+                        <i class="fas fa-search-plus fa-2x"></i>
+                    </div>
+                </div>
+                
+                <div class="mt-auto p-3 border border-dark bg-black rounded" style="min-height: 120px;">
+                    <small class="tech-font text-cyan fw-bold mb-2 d-block">
+                        <i class="fas fa-project-diagram me-2"></i>ANALISIS KOMPARATIF:
+                    </small>
+                    <p class="tech-font text-dim m-0" style="font-size: 0.75rem; text-align: justify; line-height: 1.4;">
+                        Bandingkan hasil prediksi AI (Mikro) dengan citra satelit regional (Makro). 
+                        Jika AI mendeteksi awan badai, pastikan ada korelasi dengan area <span class="text-danger fw-bold">Merah/Hitam</span> pada peta satelit di lokasi pengamatan.
+                        <br>
+                        <i class="fas fa-info-circle me-1 mt-2 text-secondary"></i><span class="text-secondary">Sumber : <b>BMKG</b></span>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Styling Scrollbar */
+    .forecast-scroll::-webkit-scrollbar { width: 4px; }
+    .forecast-scroll::-webkit-scrollbar-track { background: #050a10; }
+    .forecast-scroll::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 2px; }
+    
+    .hover-glow:hover {
+        border-color: var(--neon-cyan) !important;
+        transform: translateX(3px);
+    }
+</style>

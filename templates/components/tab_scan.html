@@ -120,27 +120,39 @@
                     {% endif %}
 
                     {% if report_active %}
-                    <div class="mt-4 pt-4 border-top border-dark">
+                    <div class="mt-4 pt-4 border-top border-secondary">
                         <div class="d-flex align-items-center mb-2">
                             <i class="fas fa-user-check text-cyan me-2"></i>
-                            <span class="tech-font text-dim">VERIFIKASI MANUAL SEBELUM EKSPOR:</span>
+                            <span class="tech-font text-white fw-bold">VERIFIKASI MANUAL SEBELUM EKSPOR:</span>
                         </div>
+                        
                         <form action="/generate_report" method="POST" target="_blank">
                             <input type="hidden" name="filename" value="{{ image_file.split('/')[-1] }}">
+                            
                             <div class="input-group">
-                                <span class="input-group-text bg-dark border-secondary text-dim tech-font">FINAL DECISION:</span>
-                                <select name="corrected_class" class="form-select bg-black text-white border-secondary brand-font" style="letter-spacing: 1px;">
+                                <span class="input-group-text tech-font" 
+                                      style="background-color: #000; color: var(--neon-cyan); border: 1px solid var(--neon-cyan); font-weight: bold; text-shadow: 0 0 5px rgba(0, 242, 255, 0.3);">
+                                    FINAL DECISION:
+                                </span>
+                                
+                                <select name="corrected_class" class="form-select brand-font" 
+                                        style="background-color: #1a1a1a; color: #ffffff; border: 1px solid var(--neon-cyan); letter-spacing: 1px; font-weight: bold;">
                                     {% for name in class_names %}
                                         <option value="{{ name }}" {% if name == final_decision.class %}selected{% endif %}>
                                             {{ name|upper }}
                                         </option>
                                     {% endfor %}
                                 </select>
-                                <button type="submit" class="btn btn-cyber px-4" style="width: auto; border-radius: 0 5px 5px 0;">
-                                    <i class="fas fa-file-pdf me-2"></i>CETAK LAPORAN
-                                </button>
+                                
+                                <button type="submit" class="btn btn-print-fixed px-4 brand-font" style="border-radius: 0 5px 5px 0;">
+                                <i class="fas fa-file-pdf me-2"></i>CETAK LAPORAN
+                            </button>
                             </div>
-                            <small class="text-muted tech-font">*Jika AI salah, silakan ubah jenis awan pada menu di atas sebelum mencetak.</small>
+                            
+                            <small class="tech-font d-block mt-2" style="color: #e0e0e0; font-size: 0.85rem;">
+                                <i class="fas fa-info-circle me-1 text-cyan"></i>
+                                *Jika prediksi AI kurang tepat, silakan ubah jenis awan pada menu di atas sebelum mencetak.
+                            </small>
                         </form>
                     </div>
                     {% endif %}

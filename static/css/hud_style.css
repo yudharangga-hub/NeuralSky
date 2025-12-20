@@ -73,3 +73,34 @@
 
 @keyframes rotateHUD { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
 @keyframes scanDown { 0% { top: -10%; opacity: 0; } 50% { opacity: 1; } 100% { top: 110%; opacity: 0; } }
+
+/* =========================================
+   PERBAIKAN VISUAL TOMBOL & LOGO
+   ========================================= */
+
+/* 1. Tombol Cetak (High Visibility) */
+.btn-print-fixed {
+    background-color: var(--neon-cyan) !important;
+    color: #000000 !important; /* Teks Hitam Pekat */
+    font-weight: 900 !important;
+    border: 2px solid #ffffff !important; /* Border Putih agar batasnya tegas */
+    box-shadow: 0 0 15px var(--neon-cyan) !important; /* Glow Effect */
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.btn-print-fixed:hover {
+    background-color: #ffffff !important; /* Saat hover jadi Putih */
+    box-shadow: 0 0 25px #ffffff, 0 0 50px var(--neon-cyan) !important;
+    transform: scale(1.02);
+}
+
+/* 2. Efek Stroke untuk Logo BMKG */
+/* Menggunakan drop-shadow berulang untuk meniru efek stroke/outline putih */
+.logo-stroke {
+    filter: drop-shadow(1px 1px 0 rgba(255, 255, 255, 0.8))
+            drop-shadow(-1px -1px 0 rgba(255, 255, 255, 0.8))
+            drop-shadow(1px -1px 0 rgba(255, 255, 255, 0.8))
+            drop-shadow(-1px 1px 0 rgba(255, 255, 255, 0.8));
+}

@@ -7,9 +7,15 @@ from torchvision import models, transforms
 from PIL import Image
 from flask import Flask, render_template, request, url_for, redirect, send_file
 import numpy as np
-import cv2  # <--- LIBRARY BARU
+import cv2
+import requests  # Library untuk akses data BMKG
+import urllib3
+
+# Nonaktifkan peringatan SSL untuk request ke BMKG (agar lancar di local)
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # --- IMPORT MODUL CUSTOM ---
+# Pastikan file gradcam_pytorch.py, impact_logic.py, report_generator.py ada di folder yang sama
 from gradcam_pytorch import GradCAM, save_gradcam 
 
 try:
@@ -22,7 +28,7 @@ except ImportError:
 
 app = Flask(__name__)
 
-# --- KONFIGURASI ---
+# --- KONFIGURASI FOLDER ---
 UPLOAD_FOLDER = 'static/uploads'
 CAM_FOLDER = 'static/heatmaps'
 MODEL_FOLDER = 'models_pytorch' 
@@ -32,14 +38,15 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['CAM_FOLDER'] = CAM_FOLDER
 app.config['TRAIN_DIR'] = TRAIN_DIR
 
+# Buat folder jika belum ada
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(CAM_FOLDER, exist_ok=True)
 
-# --- SETUP DEVICE ---
+# --- SETUP DEVICE (GPU/CPU) ---
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"[INFO] Server berjalan di: {device}")
 
-# --- DETEKSI KELAS ---
+# --- DAFTAR KELAS & WILAYAH BMKG ---
 if os.path.exists(TRAIN_DIR):
     CLASS_NAMES = sorted(os.listdir(TRAIN_DIR))
 else:
@@ -49,7 +56,19 @@ else:
 
 NUM_CLASSES = len(CLASS_NAMES)
 
-# --- DEFINISI MODEL ---
+# Daftar Kode Wilayah untuk Dropdown
+# Referensi: Kepmendagri / Database BMKG
+WILAYAH_DICT = {
+    "36.74.06.1005": "PAMULANG (TANGSEL)",        # Default Project
+    "31.71.01.1001": "GAMBIR (JAKARTA PUSAT)",    # Pusat Jakarta
+    "36.74.07.1002": "PAKUALAM (SERPONG UTARA)",  # GANTI BANDARA -> PAKUALAM
+    "32.71.01.1001": "BOGOR TENGAH",              # Data Hujan Kota Hujan
+    "51.03.01.1001": "KUTA (BALI)",               # Wisata
+    "34.71.11.1001": "KRATON (YOGYAKARTA)"        # Daerah Istimewa
+}
+
+# --- DEFINISI MODEL (SIMPLE CNN) ---
+# Harus didefinisikan ulang agar state_dict bisa dimuat
 class SimpleCNN(nn.Module):
     def __init__(self, num_classes):
         super(SimpleCNN, self).__init__()
@@ -72,6 +91,7 @@ class SimpleCNN(nn.Module):
 models_dict = {}
 def load_models():
     print("[INFO] Loading PyTorch Models...")
+    # 1. Simple CNN
     try:
         model = SimpleCNN(NUM_CLASSES)
         path = os.path.join(MODEL_FOLDER, 'simple_cnn_v2.pth')
@@ -79,8 +99,9 @@ def load_models():
             model.load_state_dict(torch.load(path, map_location=device))
             model.to(device).eval()
             models_dict['Simple CNN'] = model
-    except Exception: pass
+    except Exception as e: print(f"[ERR] Load SimpleCNN: {e}")
 
+    # 2. MobileNetV2
     try:
         model = models.mobilenet_v2(weights=None)
         model.classifier[1] = nn.Linear(model.last_channel, NUM_CLASSES)
@@ -89,8 +110,9 @@ def load_models():
             model.load_state_dict(torch.load(path, map_location=device))
             model.to(device).eval()
             models_dict['MobileNetV2'] = model
-    except Exception: pass
+    except Exception as e: print(f"[ERR] Load MobileNet: {e}")
 
+    # 3. EfficientNetB0
     try:
         model = models.efficientnet_b0(weights=None)
         model.classifier[1] = nn.Linear(1280, NUM_CLASSES)
@@ -99,40 +121,58 @@ def load_models():
             model.load_state_dict(torch.load(path, map_location=device))
             model.to(device).eval()
             models_dict['EfficientNetB0'] = model
-    except Exception: pass
+    except Exception as e: print(f"[ERR] Load EfficientNet: {e}")
 load_models()
 
-# --- HELPER ---
+# --- HELPER IMAGE TRANSFORM ---
 val_transform = transforms.Compose([
     transforms.Resize((224, 224)), transforms.ToTensor(),
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ])
 
-# --- FUNGSI BARU: HITUNG OKTAS (COMPUTER VISION) ---
+# --- FUNGSI CV: OKTAS (CLOUD COVERAGE) ---
 def analyze_cloud_properties(filepath):
     try:
         img = cv2.imread(filepath)
         if img is None: return 0, 0
-        
-        # Grayscale & Thresholding (Memisahkan awan putih dari langit biru/gelap)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        # Threshold 110: Angka eksperimental (awan biasanya pixel > 110)
+        # Thresholding: Memisahkan awan (putih) dan langit (gelap)
         _, thresh = cv2.threshold(gray, 110, 255, cv2.THRESH_BINARY)
-        
         total_pixels = img.shape[0] * img.shape[1]
         cloud_pixels = cv2.countNonZero(thresh)
-        
         coverage_percent = (cloud_pixels / total_pixels) * 100
-        
-        # Konversi ke Oktas (0-8)
         oktas = round((coverage_percent / 100) * 8)
-        
         return round(coverage_percent, 1), oktas
     except Exception as e:
         print(f"[ERR] Gagal hitung oktas: {e}")
         return 0, 0
 
-# --- ROUTES ---
+# --- FUNGSI BMKG: FETCH DATA DINAMIS ---
+def get_bmkg_data(kode_wilayah):
+    api_url = f"https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4={kode_wilayah}"
+    
+    # Headers User-Agent agar tidak diblokir server BMKG
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    
+    try:
+        print(f"[INFO] Mengambil data BMKG: {api_url}")
+        response = requests.get(api_url, headers=headers, timeout=10, verify=False)
+        
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"[ERR] Status Code BMKG: {response.status_code}")
+    except Exception as e:
+        print(f"[ERR] Exception Request BMKG: {e}")
+    return None
+
+def get_satellite_image():
+    # URL Statis Citra Satelit Himawari-9 (IR Enhanced)
+    return "https://inderaja.bmkg.go.id/IMAGE/HIMA/H08_EH_Indonesia.png"
+
+# --- ROUTE UTAMA (DASHBOARD) ---
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -146,14 +186,14 @@ def index():
             return redirect(url_for('index', filename=filename))
 
     filename = request.args.get('filename')
+    
+    # Inisialisasi variabel agar tidak error di Jinja2
     results = []
     final_decision = None
     heatmap_data = {}
     impact_info = None
     image_url = None
     evidence_files = []
-    
-    # Variabel Oktas
     cloud_coverage = 0
     oktas_val = 0
 
@@ -162,7 +202,7 @@ def index():
         if os.path.exists(filepath):
             image_url = url_for('static', filename=f'uploads/{filename}')
             
-            # 1. Hitung Oktas (Fitur Baru)
+            # 1. Hitung Oktas
             cloud_coverage, oktas_val = analyze_cloud_properties(filepath)
 
             # 2. AI Inference
@@ -176,7 +216,7 @@ def index():
                     with torch.no_grad():
                         outputs = model(img_tensor)
                         probabilities = torch.nn.functional.softmax(outputs, dim=1)
-                        
+                    
                     score, idx = torch.max(probabilities, 1)
                     idx = idx.item()
                     score = score.item()
@@ -191,7 +231,7 @@ def index():
                     if prediction not in vote_box: vote_box[prediction] = []
                     vote_box[prediction].append(score)
 
-                    # Grad-CAM Logic
+                    # 3. Grad-CAM Logic
                     target_layer = None
                     if name == 'Simple CNN': target_layer = model.features[-2]
                     elif name == 'MobileNetV2': target_layer = model.features[-1] 
@@ -204,9 +244,9 @@ def index():
                         save_gradcam(filepath, heatmap, cam_path)
                         heatmap_data[name] = {'img': url_for('static', filename=f'heatmaps/cam_{name}_{filename}'), 
                                               'conf': round(score*100, 2), 'pred': prediction}
-                except Exception: pass
+                except Exception as e: print(f"[ERR] Inference {name}: {e}")
 
-            # Ensemble
+            # 4. Ensemble Weighted Voting
             best_class = None
             highest_score = -1
             for cls, scores in vote_box.items():
@@ -217,9 +257,10 @@ def index():
             
             if best_class:
                 final_decision = {'class': best_class, 'confidence': round((sum(vote_box[best_class])/len(vote_box[best_class])) * 100, 2)}
+                
+                # 5. Sistem Pakar & Evidence
                 if REPORT_FEATURE_ACTIVE:
                     impact_info = get_weather_impact(best_class)
-                    # Evidence Retrieval
                     try:
                         class_path = os.path.join(app.config['TRAIN_DIR'], best_class)
                         if os.path.exists(class_path):
@@ -232,9 +273,9 @@ def index():
                            final_decision=final_decision, impact_info=impact_info,
                            heatmap_data=heatmap_data, evidence_files=evidence_files,
                            class_names=CLASS_NAMES, report_active=REPORT_FEATURE_ACTIVE,
-                           # Kirim data oktas ke HTML
                            cloud_coverage=cloud_coverage, oktas_val=oktas_val)
 
+# --- ROUTE UTILS ---
 @app.route('/dataset_image/<path:filename>')
 def dataset_image(filename):
     return send_file(os.path.join(app.config['TRAIN_DIR'], filename))
@@ -244,34 +285,54 @@ def generate_report():
     if not REPORT_FEATURE_ACTIVE: return "Feature Disabled", 500
     filename = request.form.get('filename')
     corrected_class = request.form.get('corrected_class')
-    
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    model = models_dict.get('EfficientNetB0')
-    confidence_str = ""
     
-    # Hitung ulang oktas untuk laporan
+    confidence_str = "MANUAL VALIDATION"
     coverage, oktas = analyze_cloud_properties(filepath)
-
-    if model:
-        img_pil = Image.open(filepath).convert('RGB')
-        img_tensor = val_transform(img_pil).unsqueeze(0).to(device)
-        with torch.no_grad():
-            out = model(img_tensor)
-            ai_score = torch.max(torch.nn.functional.softmax(out, dim=1), 1)[0].item()
-            ai_pred = CLASS_NAMES[torch.argmax(out).item()]
-            
-            if corrected_class == ai_pred:
-                confidence_str = f"{round(ai_score * 100, 2)}% (AI Confidence)"
-            else:
-                confidence_str = "MANUAL VALIDATION (Expert Override)"
-
     impacts = get_weather_impact(corrected_class)
+    
     heatmap_path = f"static/heatmaps/cam_EfficientNetB0_{filename}"
     if not os.path.exists(heatmap_path): heatmap_path = filepath
     
-    # Update fungsi create_pdf dengan parameter oktas
     pdf_path = create_pdf(filename, corrected_class, confidence_str, impacts, heatmap_path, coverage, oktas)
     return send_file(pdf_path, as_attachment=True, download_name=f"Laporan_{corrected_class}_{filename.split('.')[0]}.pdf")
+
+# --- ROUTE DATA BMKG (UPDATED WITH DROPDOWN LOGIC) ---
+@app.route('/bmkg_feed')
+def bmkg_feed():
+    try:
+        # Ambil kode wilayah dari parameter URL, default ke Pamulang jika kosong
+        kode = request.args.get('kode', "36.74.06.1005")
+        
+        weather_data = get_bmkg_data(kode)
+        satellite_url = get_satellite_image()
+        
+        lokasi_info = {}
+        flat_forecast = []
+        
+        if weather_data and 'lokasi' in weather_data:
+            lokasi_info = weather_data['lokasi']
+            
+            # Logic parsing JSON BMKG (Flattening Nested List)
+            if 'data' in weather_data and weather_data['data']:
+                # Data BMKG strukturnya: data -> [0] -> cuaca -> [list hari] -> [list jam]
+                cuaca_per_hari = weather_data['data'][0]['cuaca']
+                
+                # Loop setiap hari, lalu loop setiap jam
+                for hari in cuaca_per_hari:
+                    for jam in hari:
+                        flat_forecast.append(jam)
+        
+        # Render template dengan data dinamis
+        return render_template('components/tab_bmkg.html', 
+                               lokasi=lokasi_info, 
+                               forecasts=flat_forecast,
+                               satellite=satellite_url,
+                               daftar_wilayah=WILAYAH_DICT, # Kirim daftar wilayah ke HTML
+                               current_kode=kode)           # Kirim kode yang sedang aktif
+    except Exception as e:
+        print(f"[ERR] Route bmkg_feed error: {e}")
+        return f"<div class='text-danger p-5'>SYSTEM ERROR: {e}</div>", 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

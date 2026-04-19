@@ -1,0 +1,10 @@
+prediction_id,analysis_id,model_name,model_version,predicted_class,confidence_pct,inference_time_ms,class_index,top_1_class,top_1_conf,created_at
+4e7e4be8-368d-4e17-94be-28b5d4eb211e,5c01b03b-4360-4942-9d24-2c09bbc6bd77,Simple CNN,v2.0,cumulus clouds,82.26,535.81,3,cumulus clouds,82.26,2026-04-19 12:50:01
+d33c6ed2-5a40-48c7-bc72-80f4d0209fa7,5c01b03b-4360-4942-9d24-2c09bbc6bd77,MobileNetV2,finetuned_v1,cumulus clouds,55.34,89.55,3,cumulus clouds,55.34,2026-04-19 12:50:01
+0e889f5a-35be-4dcc-bf30-8452389dc38d,5c01b03b-4360-4942-9d24-2c09bbc6bd77,EfficientNetB0,finetuned_v1,cumulus clouds,95.72,92.54,3,cumulus clouds,95.72,2026-04-19 12:50:01
+317103a5-6279-4ecc-8e4c-87b42452a00f,5d183301-dbf2-443c-b48c-2b9899d43907,Simple CNN,v2.0,cumulus clouds,82.26,129.09,3,cumulus clouds,82.26,2026-04-19 13:32:19
+67fafb53-8b63-4260-9d83-7296d9f03e20,5d183301-dbf2-443c-b48c-2b9899d43907,MobileNetV2,finetuned_v1,cumulus clouds,55.34,54.99,3,cumulus clouds,55.34,2026-04-19 13:32:19
+5b665796-5849-42c2-a689-690f256258b3,5d183301-dbf2-443c-b48c-2b9899d43907,EfficientNetB0,finetuned_v1,cumulus clouds,95.72,74.13,3,cumulus clouds,95.72,2026-04-19 13:32:19
+f8f8f8e4-1c0b-4baa-b0ff-767c003300d8,ee1580b1-4782-4077-8593-65c66e595b1d,Simple CNN,v2.0,cumulus clouds,66.39,623.07,3,cumulus clouds,66.39,2026-04-19 13:35:11
+ccdcc3e5-7595-4766-99df-3861aad90e82,ee1580b1-4782-4077-8593-65c66e595b1d,MobileNetV2,finetuned_v1,cumulonimbus clouds,98.41,96.52,2,cumulonimbus clouds,98.41,2026-04-19 13:35:11
+d6e27689-747f-41a4-9a90-954f1365a6f6,ee1580b1-4782-4077-8593-65c66e595b1d,EfficientNetB0,finetuned_v1,cumulonimbus clouds,98.13,88.55,2,cumulonimbus clouds,98.13,2026-04-19 13:35:11

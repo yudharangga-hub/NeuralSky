@@ -222,6 +222,65 @@
                 });
         }
     </script>
+<script>
+    // --- FUNGSI GANTI SATELIT (DIPINDAHKAN KE SINI AGAR GLOBAL) ---
+    function changeSatellite(mode) {
+        console.log("Mengganti Satelit ke Mode:", mode);
+        
+        const img = document.getElementById('satImage');
+        const desc = document.getElementById('satDesc');
+        const loading = document.getElementById('satLoading');
+        
+        // Cek jika elemen ada (karena tab mungkin belum diload)
+        if (!img || !desc) return;
 
+        // Tampilkan loading
+        if(loading) loading.style.display = 'block';
+        img.style.opacity = '0.3';
+        
+        // Timestamp untuk mencegah cache browser (agar gambar selalu baru)
+        const ts = new Date().getTime();
+        
+        let newUrl = "";
+        let description = "";
+
+        if (mode === 'indo') {
+            newUrl = "https://inderaja.bmkg.go.id/IMAGE/HIMA/H08_EH_Indonesia.png";
+            description = "Infrared Enhanced (Indonesia). Menampilkan suhu puncak awan. Area merah menunjukkan awan tebal/badai.";
+        } 
+        else if (mode === 'jabo') {
+            // URL KHUSUS JABODETABEK
+            newUrl = "https://inderaja.bmkg.go.id/IMAGE/HIMA/H08_EH_Jakarta.png";
+            description = "<b>Himawari-9 Enhanced Jabodetabek.</b> Citra satelit inframerah 10.4µm Enhanced khusus untuk wilayah Jabodetabek. Lebih detail untuk validasi lokal.";
+        } 
+        else if (mode === 'rain') {
+            // URL KHUSUS POTENSI HUJAN
+            newUrl = "https://inderaja.bmkg.go.id/IMAGE/HIMA/H08_RP_Indonesia.png";
+            description = "<b>Himawari-9 Rainfall Potential.</b> Estimasi potensi curah hujan berdasarkan suhu puncak awan. Hijau: Ringan, Kuning: Sedang, Merah: Lebat.";
+        }
+        else if (mode === 'cloudtype') {
+            // Himawari Cloud Type (CLC) dari BMKG (HCAI_CLC)
+            newUrl = "https://inderaja.bmkg.go.id/IMAGE/HCAI/CLC/HCAI_CLC_Indonesia.png";
+            description = "<b>Himawari-9 Cloud Type.</b> Produk hasil kolaborasi penelitian dengan JMA untuk mengidentifikasi jenis awan yang terdeteksi melalui band inframerah dan visual Himawari. Produk ini diupdate setiap ~1 jam.";
+        }
+
+        // Update Gambar dan Deskripsi
+        img.src = newUrl + "?v=" + ts;
+        desc.innerHTML = description;
+
+        // Handler saat gambar selesai dimuat
+        img.onload = function() {
+            if(loading) loading.style.display = 'none';
+            img.style.opacity = '1';
+        };
+
+        // Handler jika gambar error
+        img.onerror = function() {
+            if(loading) loading.style.display = 'none';
+            // Placeholder jika server BMKG down
+            img.src = 'https://placehold.co/600x400/000/FFF?text=SERVER+OFFLINE'; 
+        };
+    }
+</script>
 </body>
 </html>

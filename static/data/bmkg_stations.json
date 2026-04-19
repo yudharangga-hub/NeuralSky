@@ -1,0 +1,42 @@
+[
+  {
+    "id_wmo": "96733",
+    "name": "Stasiun Klimatologi Banten",
+    "lat": -6.26151,
+    "lon": 106.75084,
+    "period": "01-11-2025 - 30-11-2025",
+    "elevation_m": 27
+  },
+  {
+    "id_wmo": "96745",
+    "name": "Stasiun Meteorologi Kemayoran",
+    "lat": -6.15559,
+    "lon": 106.84,
+    "period": "01-11-2025 - 30-11-2025",
+    "elevation_m": 4
+  },
+  {
+    "id_wmo": "96749",
+    "name": "Stasiun Meteorologi Soekarno Hatta",
+    "lat": -6.12,
+    "lon": 106.65,
+    "period": "01-11-2025 - 30-11-2025",
+    "elevation_m": 11
+  },
+  {
+    "id_wmo": "96751",
+    "name": "Stasiun Meteorologi Citeko",
+    "lat": -6.7,
+    "lon": 106.85,
+    "period": "01-11-2025 - 30-11-2025",
+    "elevation_m": 920
+  },
+  {
+    "id_wmo": "96753",
+    "name": "Stasiun Klimatologi Jawa Barat (Dramaga/Bogor)",
+    "lat": -6.5,
+    "lon": 106.75,
+    "period": "01-11-2025 - 30-11-2025",
+    "elevation_m": 207
+  }
+]

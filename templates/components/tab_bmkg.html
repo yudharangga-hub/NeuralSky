@@ -2,14 +2,16 @@
     <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-dark pb-3">
         <div class="d-flex align-items-center">
             <div class="me-4">
-                <h3 class="brand-font text-cyan m-0"><i class="fas fa-globe-asia me-2"></i>OFFICIAL BMKG DATA FEED</h3>
-                <small class="tech-font text-dim">LIVE CONNECTION: API.BMKG.GO.ID</small>
+                <h3 class="brand-font text-cyan m-0">
+                    <i class="fas fa-globe-asia me-2"></i>OFFICIAL BMKG DATA FEED
+                </h3>
+                <small class="tech-font text-dim">LIVE CONNECTION: API.BMKG.GO.ID // REGION ID: {{ current_kode }}</small>
             </div>
             
-            <div class="input-group">
+            <div class="input-group shadow-sm">
                 <span class="input-group-text bg-dark border-secondary text-cyan tech-font"><i class="fas fa-map-marked-alt"></i></span>
                 <select id="lokasiSelector" class="form-select bg-black text-white border-secondary brand-font" 
-                        onchange="changeLocation(this.value)" style="max-width: 250px;">
+                        onchange="changeLocation(this.value)" style="max-width: 300px; letter-spacing: 1px;">
                     {% for kode, nama in daftar_wilayah.items() %}
                         <option value="{{ kode }}" {% if kode == current_kode %}selected{% endif %}>
                             {{ nama }}
@@ -20,35 +22,40 @@
         </div>
 
         <div class="text-end">
-            <span class="badge bg-black border border-success text-success tech-font blink-text"><i class="fas fa-wifi me-1"></i>STREAM ACTIVE</span>
+            <span class="badge bg-black border border-success text-success tech-font blink-text">
+                <i class="fas fa-wifi me-1"></i>STREAM ACTIVE
+            </span>
         </div>
     </div>
     
     <div class="row g-4">
+        
         <div class="col-lg-6">
-            <div class="p-3 border border-secondary bg-black bg-opacity-50 rounded h-100 d-flex flex-column">
+            <div class="p-3 border border-secondary bg-black bg-opacity-50 rounded h-100 d-flex flex-column shadow-lg">
                 
-                <h5 class="text-white brand-font border-bottom border-secondary pb-2 mb-3">
-                    <i class="fas fa-map-marker-alt text-danger me-2"></i>
-                    {% if lokasi.desa %}LOKASI: {{ lokasi.desa|upper }}{% else %}DATA LOKASI{% endif %}
-                    <span class="float-end tech-font text-dim" style="font-size: 0.7rem; margin-top: 3px;">
-                        KEC: {{ lokasi.kecamatan }}
-                    </span>
-                </h5>
+                <div class="d-flex justify-content-between align-items-end border-bottom border-secondary pb-2 mb-3">
+                    <h5 class="text-white brand-font m-0">
+                        <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                        {% if lokasi.desa %}LOKASI: {{ lokasi.desa|upper }}{% else %}DATA LOKASI{% endif %}
+                    </h5>
+                    <span class="tech-font text-dim" style="font-size: 0.75rem;">KEC: {{ lokasi.kecamatan }}</span>
+                </div>
 
                 <div class="forecast-scroll mb-3 flex-grow-1" style="max-height: 320px; overflow-y: auto; padding-right: 5px;">
                     {% if forecasts %}
                         {% for item in forecasts %}
                         <div class="d-flex align-items-center justify-content-between p-2 mb-2 border border-dark rounded bg-black hover-glow" style="transition: 0.3s;">
-                            <div class="text-white tech-font text-center me-2">
+                            <div class="text-white tech-font text-center me-2" style="min-width: 80px;">
                                 <span class="badge bg-dark border border-secondary d-block mb-1 text-dim" style="font-size: 0.6rem;">{{ item.local_datetime[:10] }}</span>
                                 <span class="fs-5 fw-bold text-cyan">{{ item.local_datetime[11:16] }}</span>
                             </div>
+                            
                             <div class="text-center flex-grow-1 border-start border-end border-dark px-2">
-                                <img src="{{ item.image }}" alt="Icon" style="width: 40px; filter: drop-shadow(0 0 3px white);">
-                                <div class="small text-white mt-1 tech-font text-uppercase" style="font-size: 0.7rem;">{{ item.weather_desc }}</div>
+                                <img src="{{ item.image }}" alt="Icon" style="width: 35px; filter: drop-shadow(0 0 3px white);">
+                                <div class="small text-white mt-1 tech-font text-uppercase fw-bold" style="font-size: 0.75rem;">{{ item.weather_desc }}</div>
                             </div>
-                            <div class="text-end tech-font text-dim small ms-2" style="font-size: 0.75rem; min-width: 70px;">
+                            
+                            <div class="text-end tech-font text-dim small ms-2" style="font-size: 0.75rem; min-width: 80px;">
                                 <div><i class="fas fa-temperature-high text-warning me-1"></i>{{ item.t }}°C</div>
                                 <div><i class="fas fa-tint text-primary me-1"></i>{{ item.hu }}%</div>
                                 <div><i class="fas fa-wind text-secondary me-1"></i>{{ item.ws }}km/h</div>
@@ -58,62 +65,109 @@
                     {% else %}
                         <div class="text-center py-5 text-muted">
                             <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
-                            <p>Gagal memuat data.</p>
+                            <p>Menunggu data dari server...</p>
                         </div>
                     {% endif %}
                 </div>
 
-                <div class="mt-auto p-3 border border-dark bg-black rounded" style="min-height: 120px;">
+                <div class="mt-auto p-3 border border-dark bg-black rounded" style="min-height: 140px; position: relative; overflow: hidden;">
+                    <div style="position: absolute; right: -10px; bottom: -10px; font-size: 5rem; color: rgba(255,255,255,0.03);">
+                        <i class="fas fa-plane"></i>
+                    </div>
+
                     <small class="tech-font text-warning fw-bold mb-2 d-block">
-                        <i class="fas fa-microchip me-2"></i>SPESIFIKASI DATA SATELIT (GK2A):
+                        <i class="fas fa-plane-departure me-2"></i>FLIGHT SAFETY ANALYSIS:
                     </small>
-                    <p class="tech-font text-dim m-0" style="font-size: 0.75rem; text-align: justify; line-height: 1.4;">
-                        Produk <b>GK2A Enhanced</b> memvisualisasikan suhu puncak awan dari radiasi gelombang 10.4µm. 
-                        Warna <span class="text-info fw-bold">Hitam/Biru</span> menandakan area cerah/minim awan. 
-                        Sebaliknya, warna <span class="text-danger fw-bold">Jingga/Merah</span> (suhu dingin) mengindikasikan 
-                        pertumbuhan awan vertikal yang signifikan, berpotensi menjadi <b>Cumulonimbus</b>.
-                    </p>
+                    
+                    {% if forecasts %}
+                        {% set terkini = forecasts[0] %}
+                        {% set is_rain = 'Hujan' in terkini.weather_desc %}
+                        {% set is_thick = 'Tebal' in terkini.weather_desc %}
+                        
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="me-3">
+                                <span class="tech-font text-dim" style="font-size: 0.7rem;">STATUS SAAT INI:</span>
+                                <div class="fw-bold" style="font-size: 1.1rem; letter-spacing: 1px;">
+                                    {% if is_rain or is_thick %}
+                                        <span class="text-danger blink-text" style="text-shadow: 0 0 10px red;">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>CAUTION (IFR)
+                                        </span>
+                                    {% else %}
+                                        <span class="text-success" style="text-shadow: 0 0 10px lime;">
+                                            <i class="fas fa-check-circle me-2"></i>SAFE (VFR)
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="tech-font text-dim m-0" style="font-size: 0.75rem; text-align: justify; line-height: 1.3; border-top: 1px solid #333; padding-top: 8px;">
+                            {% if is_rain %}
+                                Terdeteksi <b>{{ terkini.weather_desc }}</b> dengan kelembapan tinggi ({{ terkini.hu }}%). Visibilitas berpotensi menurun drastis. Risiko runway basah/licin.
+                            {% else %}
+                                Kondisi cuaca <b>{{ terkini.weather_desc }}</b> terpantau stabil. Suhu {{ terkini.t }}°C dan Angin {{ terkini.ws }} km/h dalam batas aman operasional penerbangan visual.
+                            {% endif %}
+                        </p>
+                    {% else %}
+                        <p class="tech-font text-dim m-0">Memuat data analisis...</p>
+                    {% endif %}
                 </div>
 
             </div>
         </div>
 
         <div class="col-lg-6">
-            <div class="p-3 border border-secondary bg-black bg-opacity-50 rounded h-100 d-flex flex-column">
+            <div class="p-3 border border-secondary bg-black bg-opacity-50 rounded h-100 d-flex flex-column shadow-lg">
                 
-                <h5 class="text-white brand-font border-bottom border-secondary pb-2 mb-3">
-                    <i class="fas fa-satellite me-2 text-purple"></i>REAL-TIME SATELLITE (HIMAWARI-9)
-                </h5>
+                <div class="d-flex justify-content-between align-items-center border-bottom border-secondary pb-2 mb-3">
+                    <h5 class="text-white brand-font m-0">
+                        <i class="fas fa-satellite me-2 text-purple"></i>SATELLITE
+                    </h5>
+                    <select id="satSelector" class="form-select form-select-sm bg-dark text-cyan border-secondary tech-font" 
+                            style="width: auto; height: 30px; font-size: 0.75rem; cursor: pointer;" 
+                            onchange="changeSatellite(this.value)">
+                        <option value="indo">INDONESIA (IR)</option>
+                        <option value="cloudtype">HIMAWARI CLOUD TYPE (CLC)</option>
+                    </select>
+                </div>
                 
-                <div class="ratio ratio-4x3 border border-dark position-relative overflow-hidden mb-3 bg-dark rounded shadow-lg" 
-                     style="cursor: pointer;" 
-                     onclick="openModal('{{ satellite }}', 'SATELLITE HIMAWARI-9 (IR ENHANCED)')">
-                    <img src="{{ satellite }}" class="img-fluid object-fit-cover" alt="Citra Satelit" 
+                <div id="satContainer" 
+                     class="ratio ratio-4x3 border border-dark position-relative overflow-hidden mb-3 bg-dark rounded shadow-lg" 
+                     style="cursor: zoom-in;" 
+                     onclick="if(typeof openModal === 'function') openModal(document.getElementById('satImage').src, 'SATELLITE VIEW')">
+                    
+                    <img id="satImage" src="{{ satellite }}" class="img-fluid object-fit-cover" alt="Citra Satelit" 
+                         style="transition: opacity 0.5s ease;"
                          onerror="this.src='https://placehold.co/600x400/000/FFF?text=SATELLITE+OFFLINE'">
                     
+                    <div id="satLoading" class="position-absolute top-50 start-50 translate-middle text-cyan" style="display: none;">
+                        <div class="spinner-border" role="status"></div>
+                    </div>
+
                     <div class="position-absolute top-0 start-0 w-100 h-100 pointer-events-none" 
                          style="background: repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(0, 242, 255, 0.1) 50px),
                                 repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(0, 242, 255, 0.1) 50px);">
                     </div>
                     
                     <div class="position-absolute top-0 end-0 m-2">
-                        <span class="badge bg-danger animate-pulse">LIVE FEED</span>
+                        <span class="badge bg-danger animate-pulse shadow">LIVE FEED</span>
                     </div>
-                    <div class="position-absolute bottom-0 end-0 m-2 text-cyan opacity-50">
-                        <i class="fas fa-search-plus fa-2x"></i>
+                    <div class="position-absolute bottom-0 end-0 m-2 text-cyan opacity-75">
+                        <i class="fas fa-search-plus"></i>
                     </div>
                 </div>
                 
                 <div class="mt-auto p-3 border border-dark bg-black rounded" style="min-height: 120px;">
                     <small class="tech-font text-cyan fw-bold mb-2 d-block">
-                        <i class="fas fa-project-diagram me-2"></i>ANALISIS KOMPARATIF:
+                        <i class="fas fa-info-circle me-2"></i>ANALISIS CITRA:
                     </small>
-                    <p class="tech-font text-dim m-0" style="font-size: 0.75rem; text-align: justify; line-height: 1.4;">
-                        Bandingkan hasil prediksi AI (Mikro) dengan citra satelit regional (Makro). 
-                        Jika AI mendeteksi awan badai, pastikan ada korelasi dengan area <span class="text-danger fw-bold">Merah/Hitam</span> pada peta satelit di lokasi pengamatan.
-                        <br>
-                        <i class="fas fa-info-circle me-1 mt-2 text-secondary"></i><span class="text-secondary">Sumber : <b>BMKG</b></span>
+                    <p id="satDesc" class="tech-font text-dim m-0" style="font-size: 0.75rem; text-align: justify; line-height: 1.4;">
                     </p>
+                        <!-- Deskripsi dihapus sesuai permintaan -->
+                    
+                    <div class="mt-2 text-end border-top border-secondary pt-2">
+                    </div>
+                        <!-- Sumber Data BMKG dihapus sesuai permintaan -->
                 </div>
 
             </div>
@@ -122,13 +176,15 @@
 </div>
 
 <style>
-    /* Styling Scrollbar */
+    /* Styling Scrollbar Khusus Tab Ini */
     .forecast-scroll::-webkit-scrollbar { width: 4px; }
     .forecast-scroll::-webkit-scrollbar-track { background: #050a10; }
     .forecast-scroll::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 2px; }
     
+    /* Efek Hover pada List Cuaca */
     .hover-glow:hover {
         border-color: var(--neon-cyan) !important;
         transform: translateX(3px);
+        box-shadow: -5px 0 10px rgba(0, 242, 255, 0.1);
     }
 </style>

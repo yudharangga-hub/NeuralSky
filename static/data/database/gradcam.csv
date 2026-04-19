@@ -1,0 +1,10 @@
+gradcam_id,analysis_id,model_name,file_path,file_url,created_at
+70e3f813-02fb-48d8-822f-2f34ad058a46,5c01b03b-4360-4942-9d24-2c09bbc6bd77,Simple CNN,static/heatmaps\cam_Simple CNN_cloud_20260419_125000.jpg,/static/heatmaps/cam_Simple%20CNN_cloud_20260419_125000.jpg,2026-04-19 12:50:01
+88808b6e-fee5-4d31-a09c-3ce377e4c2db,5c01b03b-4360-4942-9d24-2c09bbc6bd77,MobileNetV2,static/heatmaps\cam_MobileNetV2_cloud_20260419_125000.jpg,/static/heatmaps/cam_MobileNetV2_cloud_20260419_125000.jpg,2026-04-19 12:50:01
+b3f73157-691b-4332-9d7b-773fbafd85c2,5c01b03b-4360-4942-9d24-2c09bbc6bd77,EfficientNetB0,static/heatmaps\cam_EfficientNetB0_cloud_20260419_125000.jpg,/static/heatmaps/cam_EfficientNetB0_cloud_20260419_125000.jpg,2026-04-19 12:50:01
+b4b2aeb4-2f59-4787-be99-6a1c1953372f,5d183301-dbf2-443c-b48c-2b9899d43907,Simple CNN,static/heatmaps\cam_Simple CNN_cloud_20260419_125000.jpg,/static/heatmaps/cam_Simple%20CNN_cloud_20260419_125000.jpg,2026-04-19 13:32:19
+4de253c6-fddb-4eb6-af0d-469d9be11c93,5d183301-dbf2-443c-b48c-2b9899d43907,MobileNetV2,static/heatmaps\cam_MobileNetV2_cloud_20260419_125000.jpg,/static/heatmaps/cam_MobileNetV2_cloud_20260419_125000.jpg,2026-04-19 13:32:19
+4f839ec1-99c1-4ddc-9ce1-02dd92743c12,5d183301-dbf2-443c-b48c-2b9899d43907,EfficientNetB0,static/heatmaps\cam_EfficientNetB0_cloud_20260419_125000.jpg,/static/heatmaps/cam_EfficientNetB0_cloud_20260419_125000.jpg,2026-04-19 13:32:19
+5548d497-9777-47aa-8b72-dca297300b75,ee1580b1-4782-4077-8593-65c66e595b1d,Simple CNN,static/heatmaps\cam_Simple CNN_cloud_20260419_133509.png,/static/heatmaps/cam_Simple%20CNN_cloud_20260419_133509.png,2026-04-19 13:35:11
+229f03a0-2230-4066-886e-f38a34c0c2e9,ee1580b1-4782-4077-8593-65c66e595b1d,MobileNetV2,static/heatmaps\cam_MobileNetV2_cloud_20260419_133509.png,/static/heatmaps/cam_MobileNetV2_cloud_20260419_133509.png,2026-04-19 13:35:11
+b1272bd6-5e19-43a9-a738-674a1a871398,ee1580b1-4782-4077-8593-65c66e595b1d,EfficientNetB0,static/heatmaps\cam_EfficientNetB0_cloud_20260419_133509.png,/static/heatmaps/cam_EfficientNetB0_cloud_20260419_133509.png,2026-04-19 13:35:11

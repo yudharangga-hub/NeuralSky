@@ -1,0 +1,4 @@
+analysis_id,upload_id,timestamp_utc,timestamp_wib,cloud_coverage_pct,oktas_value,oktas_description,ensemble_class,ensemble_confidence,ensemble_method,total_processing_time_ms,analysis_status,validated_by,validation_notes,created_at
+5c01b03b-4360-4942-9d24-2c09bbc6bd77,b36234ca-3730-4975-9952-05bdced10cf8,2026-04-19T05:50:01+0000,2026-04-19T12:50:01+07:00,54.5,4,Broken,cumulus clouds,77.77,weighted_voting,717.9,completed,,,2026-04-19 12:50:01
+5d183301-dbf2-443c-b48c-2b9899d43907,b36234ca-3730-4975-9952-05bdced10cf8,2026-04-19T06:32:19+0000,2026-04-19T13:32:19+07:00,54.5,4,Broken,cumulus clouds,77.77,weighted_voting,258.21,completed,,,2026-04-19 13:32:19
+ee1580b1-4782-4077-8593-65c66e595b1d,08147418-ac6a-48a7-9152-9164111d38a8,2026-04-19T06:35:11+0000,2026-04-19T13:35:11+07:00,50.4,4,Broken,cumulonimbus clouds,98.27,weighted_voting,808.14,completed,,,2026-04-19 13:35:11

@@ -1,6 +1,7 @@
 import os
 import time
 import random
+import uuid
 import torch
 import torch.nn as nn
 from torchvision import models, transforms
@@ -10,6 +11,10 @@ import numpy as np
 import cv2
 import requests  # Library untuk akses data BMKG
 import urllib3
+import csv
+from datetime import datetime, timezone
+from datetime import timedelta
+from pathlib import Path
 
 # Nonaktifkan peringatan SSL untuk request ke BMKG (agar lancar di local)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -33,14 +38,219 @@ UPLOAD_FOLDER = 'static/uploads'
 CAM_FOLDER = 'static/heatmaps'
 MODEL_FOLDER = 'models_pytorch' 
 TRAIN_DIR = 'dataset/clouds_train'
+DB_FOLDER = 'static/data/database'  # Folder untuk database CSV
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['CAM_FOLDER'] = CAM_FOLDER
 app.config['TRAIN_DIR'] = TRAIN_DIR
+app.config['DB_FOLDER'] = DB_FOLDER
 
 # Buat folder jika belum ada
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(CAM_FOLDER, exist_ok=True)
+os.makedirs(DB_FOLDER, exist_ok=True)
+
+# --- PROFESSIONAL DATABASE CSV SYSTEM ---
+# Menggunakan ISO 8601 timestamp, UUID, dan metadata lengkap
+
+def get_db_path(table_name: str):
+    """Mengembalikan path file database CSV berdasarkan nama tabel"""
+    return os.path.join(DB_FOLDER, f'{table_name}.csv')
+
+def get_timestamp_iso():
+    """Mengembalikan timestamp ISO 8601 dengan timezone UTC"""
+    return datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S') + '+0000'
+
+def get_wib_timestamp():
+    """Mengembalikan timestamp dalam format WIB (UTC+7)"""
+    # Hitung manual: UTC + 7 jam
+    utc_time = datetime.utcnow()
+    wib_time = utc_time + timedelta(hours=7)
+    return wib_time.strftime('%Y-%m-%dT%H:%M:%S+07:00')
+
+# --- TABEL: UPLOADS (Metadata upload) ---
+UPLOADS_HEADER = [
+    'upload_id', 'timestamp_utc', 'timestamp_wib', 'session_id',
+    'original_filename', 'stored_filename', 'file_path',
+    'file_size_bytes', 'mime_type', 'image_width', 'image_height',
+    'upload_status', 'created_at'
+]
+
+def init_uploads_table():
+    """Inisialisasi tabel uploads"""
+    db_path = get_db_path('uploads')
+    if not os.path.exists(db_path):
+        with open(db_path, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            writer.writerow(UPLOADS_HEADER)
+
+def log_upload(session_id: str, original_filename: str, stored_filename: str, 
+               file_path: str, file_size: int, mime_type: str, 
+               width: int, height: int) -> str:
+    """Catat upload baru ke database, return upload_id"""
+    db_path = get_db_path('uploads')
+    if not os.path.exists(db_path):
+        init_uploads_table()
+    
+    upload_id = str(uuid.uuid4())
+    timestamp_utc = get_timestamp_iso()
+    timestamp_wib = get_wib_timestamp()
+    created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    with open(db_path, 'a', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            upload_id, timestamp_utc, timestamp_wib, session_id,
+            original_filename, stored_filename, file_path,
+            file_size, mime_type, width, height,
+            'pending', created_at
+        ])
+    
+    return upload_id
+
+# --- TABEL: ANALYSES (Hasil analisis) ---
+ANALYSES_HEADER = [
+    'analysis_id', 'upload_id', 'timestamp_utc', 'timestamp_wib',
+    'cloud_coverage_pct', 'oktas_value', 'oktas_description',
+    'ensemble_class', 'ensemble_confidence', 'ensemble_method',
+    'total_processing_time_ms', 'analysis_status', 'validated_by',
+    'validation_notes', 'created_at'
+]
+
+def init_analyses_table():
+    """Inisialisasi tabel analyses"""
+    db_path = get_db_path('analyses')
+    if not os.path.exists(db_path):
+        with open(db_path, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            writer.writerow(ANALYSES_HEADER)
+
+def log_analysis(upload_id: str, cloud_coverage: float, oktas_val: int,
+                 oktas_desc: str, ensemble_class: str, ensemble_conf: float,
+                 processing_time: float) -> str:
+    """Catat hasil analisis ke database"""
+    db_path = get_db_path('analyses')
+    if not os.path.exists(db_path):
+        init_analyses_table()
+    
+    analysis_id = str(uuid.uuid4())
+    timestamp_utc = get_timestamp_iso()
+    timestamp_wib = get_wib_timestamp()
+    created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    with open(db_path, 'a', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            analysis_id, upload_id, timestamp_utc, timestamp_wib,
+            round(cloud_coverage, 2), oktas_val, oktas_desc,
+            ensemble_class, round(ensemble_conf, 2), 'weighted_voting',
+            round(processing_time, 2), 'completed', '', '',
+            created_at
+        ])
+    
+    return analysis_id
+
+# --- TABEL: PREDICTIONS (Prediksi per model) ---
+PREDICTIONS_HEADER = [
+    'prediction_id', 'analysis_id', 'model_name', 'model_version',
+    'predicted_class', 'confidence_pct', 'inference_time_ms',
+    'class_index', 'top_1_class', 'top_1_conf', 'created_at'
+]
+
+def init_predictions_table():
+    """Inisialisasi tabel predictions"""
+    db_path = get_db_path('predictions')
+    if not os.path.exists(db_path):
+        with open(db_path, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            writer.writerow(PREDICTIONS_HEADER)
+
+def log_prediction(analysis_id: str, model_name: str, model_version: str,
+                   predicted_class: str, confidence: float, inference_time: float,
+                   class_idx: int, top1_class: str, top1_conf: float):
+    """Catat prediksi individual per model"""
+    db_path = get_db_path('predictions')
+    if not os.path.exists(db_path):
+        init_predictions_table()
+    
+    prediction_id = str(uuid.uuid4())
+    created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    with open(db_path, 'a', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            prediction_id, analysis_id, model_name, model_version,
+            predicted_class, round(confidence, 2), round(inference_time, 2),
+            class_idx, top1_class, round(top1_conf, 2), created_at
+        ])
+
+# --- TABEL: GRADCAM (File heatmap) ---
+GRADCAM_HEADER = [
+    'gradcam_id', 'analysis_id', 'model_name', 'file_path', 
+    'file_url', 'created_at'
+]
+
+def init_gradcam_table():
+    """Inisialisasi tabel gradcam"""
+    db_path = get_db_path('gradcam')
+    if not os.path.exists(db_path):
+        with open(db_path, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            writer.writerow(GRADCAM_HEADER)
+
+def log_gradcam(analysis_id: str, model_name: str, file_path: str, file_url: str):
+    """Catat file gradcam"""
+    db_path = get_db_path('gradcam')
+    if not os.path.exists(db_path):
+        init_gradcam_table()
+    
+    gradcam_id = str(uuid.uuid4())
+    created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    with open(db_path, 'a', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow([gradcam_id, analysis_id, model_name, file_path, file_url, created_at])
+
+# --- TABEL: EVIDENCE (File bukti) ---
+EVIDENCE_HEADER = [
+    'evidence_id', 'analysis_id', 'source_class', 'file_path',
+    'file_url', 'created_at'
+]
+
+def init_evidence_table():
+    """Inisialisasi tabel evidence"""
+    db_path = get_db_path('evidence')
+    if not os.path.exists(db_path):
+        with open(db_path, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            writer.writerow(EVIDENCE_HEADER)
+
+def log_evidence(analysis_id: str, source_class: str, file_path: str, file_url: str):
+    """Catat file evidence"""
+    db_path = get_db_path('evidence')
+    if not os.path.exists(db_path):
+        init_evidence_table()
+    
+    evidence_id = str(uuid.uuid4())
+    created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    with open(db_path, 'a', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow([evidence_id, analysis_id, source_class, file_path, file_url, created_at])
+
+# --- MODEL VERSIONS ---
+MODEL_VERSIONS = {
+    'Simple CNN': 'v2.0',
+    'MobileNetV2': 'finetuned_v1',
+    'EfficientNetB0': 'finetuned_v1'
+}
+
+# Inisialisasi semua tabel saat startup
+init_uploads_table()
+init_analyses_table()
+init_predictions_table()
+init_gradcam_table()
+init_evidence_table()
 
 # --- SETUP DEVICE (GPU/CPU) ---
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -58,13 +268,22 @@ NUM_CLASSES = len(CLASS_NAMES)
 
 # Daftar Kode Wilayah untuk Dropdown
 # Referensi: Kepmendagri / Database BMKG
+# --- GANTI WILAYAH_DICT DI app.py ---
 WILAYAH_DICT = {
-    "36.74.06.1005": "PAMULANG (TANGSEL)",        # Default Project
-    "31.71.01.1001": "GAMBIR (JAKARTA PUSAT)",    # Pusat Jakarta
-    "36.74.07.1002": "PAKUALAM (SERPONG UTARA)",  # GANTI BANDARA -> PAKUALAM
-    "32.71.01.1001": "BOGOR TENGAH",              # Data Hujan Kota Hujan
-    "51.03.01.1001": "KUTA (BALI)",               # Wisata
-    "34.71.11.1001": "KRATON (YOGYAKARTA)"        # Daerah Istimewa
+    # JAKARTA
+    "31.71.03.1001": "STAMET KEMAYORAN (JAKARTA PUSAT)",
+    "31.72.03.1001": "STAMET TANJUNG PRIOK (JAKARTA UTARA)",
+    "31.75.06.1002": "STAMET HALIM PK (JAKARTA TIMUR)",
+    
+    # TANGERANG & BANTEN
+    "36.74.03.1001": "STAKLIM BANTEN (PONDOK BETUNG)",
+    "36.71.02.1002": "STAMET SOEKARNO-HATTA (CENGKARENG)",
+    "36.03.12.2001": "STAMET BUDIARTO (CURUG/TANGERANG)",
+    
+    # BOGOR & BEKASI
+    "32.01.23.2003": "STAMET CITEKO (CISARUA/PUNCAK)",
+    "32.71.04.1001": "STAKLIM JAWA BARAT (DRAMAGA/BOGOR)",
+    "32.16.20.2005": "POS PENGAMATAN CIKARANG (BEKASI)"
 }
 
 # --- DEFINISI MODEL (SIMPLE CNN) ---
@@ -175,14 +394,56 @@ def get_satellite_image():
 # --- ROUTE UTAMA (DASHBOARD) ---
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    # Inisialisasi variabel untuk tracking
+    current_upload_id = None
+    current_analysis_id = None
+    
     if request.method == 'POST':
         if 'file' not in request.files: return redirect(request.url)
         file = request.files['file']
         if file.filename == '': return redirect(request.url)
         if file:
-            filename = file.filename
+            # Simpan timestamp untuk penamaan file
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            original_filename = file.filename
+            
+            # Ekstrak ekstensi file
+            ext = os.path.splitext(original_filename)[1].lower()
+            if ext == '': ext = '.jpg'
+            
+            # Buat filename dengan timestamp: cloud_YYYYMMDD_HHMMSS_ext
+            filename = f"cloud_{timestamp}{ext}"
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
+            
+            # Ambil metadata file
+            file_size = os.path.getsize(filepath)
+            mime_type = f"image/{ext[1:]}" if ext[1:] in ['jpg', 'jpeg', 'png', 'gif'] else 'application/octet-stream'
+            
+            # Ambil dimensi gambar
+            try:
+                with Image.open(filepath) as img:
+                    img_width, img_height = img.size
+            except:
+                img_width, img_height = 0, 0
+            
+            # Generate session ID (atau gunakan yang ada)
+            session_id = request.headers.get('X-Session-ID', str(uuid.uuid4()))
+            
+            # Catat ke database uploads (tabel profesional)
+            current_upload_id = log_upload(
+                session_id=session_id,
+                original_filename=original_filename,
+                stored_filename=filename,
+                file_path=filepath,
+                file_size=file_size,
+                mime_type=mime_type,
+                width=img_width,
+                height=img_height
+            )
+            
+            print(f"[INFO] Upload recorded: {current_upload_id} - {filename}")
+            
             return redirect(url_for('index', filename=filename))
 
     filename = request.args.get('filename')
@@ -255,6 +516,17 @@ def index():
                     highest_score = weighted
                     best_class = cls
             
+            # Hitung total processing time
+            total_processing_time = sum(r['latency'] for r in results)
+            
+            # Deskripsi oktas
+            oktas_descriptions = {
+                0: 'Clear Sky', 1: 'Trace', 2: 'Few', 3: 'Scattered',
+                4: 'Broken', 5: 'Overcast', 6: 'Obscured', 7: 'Overcast (Partial)',
+                8: 'Overcast (Complete)'
+            }
+            oktas_desc = oktas_descriptions.get(oktas_val, 'Unknown')
+            
             if best_class:
                 final_decision = {'class': best_class, 'confidence': round((sum(vote_box[best_class])/len(vote_box[best_class])) * 100, 2)}
                 
@@ -267,6 +539,69 @@ def index():
                             all_imgs = [i for i in os.listdir(class_path) if i.lower().endswith(('.png','.jpg'))]
                             evidence_files = [f"{best_class}/{i}" for i in random.sample(all_imgs, min(len(all_imgs), 3))]
                     except: pass
+                
+                # === PROFESSIONAL DATABASE LOGGING ===
+                # Cari upload_id dari filename
+                upload_id = None
+                uploads_path = get_db_path('uploads')
+                if os.path.exists(uploads_path):
+                    with open(uploads_path, 'r', encoding='utf-8') as f:
+                        reader = csv.DictReader(f)
+                        for row in reader:
+                            if row['stored_filename'] == filename:
+                                upload_id = row['upload_id']
+                                break
+                
+                if upload_id:
+                    # Log ke tabel analyses
+                    current_analysis_id = log_analysis(
+                        upload_id=upload_id,
+                        cloud_coverage=cloud_coverage,
+                        oktas_val=oktas_val,
+                        oktas_desc=oktas_desc,
+                        ensemble_class=best_class,
+                        ensemble_conf=final_decision['confidence'],
+                        processing_time=total_processing_time
+                    )
+                    
+                    # Log prediksi per model
+                    for r in results:
+                        model_ver = MODEL_VERSIONS.get(r['model'], 'unknown')
+                        log_prediction(
+                            analysis_id=current_analysis_id,
+                            model_name=r['model'],
+                            model_version=model_ver,
+                            predicted_class=r['prediction'],
+                            confidence=r['confidence'],
+                            inference_time=r['latency'],
+                            class_idx=CLASS_NAMES.index(r['prediction']) if r['prediction'] in CLASS_NAMES else 0,
+                            top1_class=r['prediction'],
+                            top1_conf=r['confidence']
+                        )
+                    
+                    # Log gradcam files
+                    for name, data in heatmap_data.items():
+                        gradcam_path = os.path.join(app.config['CAM_FOLDER'], f"cam_{name}_{filename}")
+                        gradcam_url = url_for('static', filename=f'heatmaps/cam_{name}_{filename}')
+                        log_gradcam(
+                            analysis_id=current_analysis_id,
+                            model_name=name,
+                            file_path=gradcam_path,
+                            file_url=gradcam_url
+                        )
+                    
+                    # Log evidence files
+                    for ev_file in evidence_files:
+                        ev_path = os.path.join(app.config['TRAIN_DIR'], ev_file)
+                        ev_url = url_for('dataset_image', filename=ev_file)
+                        log_evidence(
+                            analysis_id=current_analysis_id,
+                            source_class=best_class,
+                            file_path=ev_path,
+                            file_url=ev_url
+                        )
+                    
+                    print(f"[INFO] Analysis recorded: {current_analysis_id} for upload {upload_id}")
 
     return render_template('index.html',
                            results=results, image_file=image_url,
@@ -301,38 +636,41 @@ def generate_report():
 @app.route('/bmkg_feed')
 def bmkg_feed():
     try:
-        # Ambil kode wilayah dari parameter URL, default ke Pamulang jika kosong
-        kode = request.args.get('kode', "36.74.06.1005")
+        # GANTI DEFAULT DARI PAMULANG KE KEMAYORAN (31.71.03.1001)
+        kode = request.args.get('kode', "31.71.03.1001") 
         
+        # Cari Nama Kota
+        nama_kota = WILAYAH_DICT.get(kode, "Lokasi Terpilih")
+
+        # Ambil Data
         weather_data = get_bmkg_data(kode)
-        satellite_url = get_satellite_image()
+        
+        # URL Satelit Default (Indonesia)
+        import time
+        ts = int(time.time())
+        satellite_url = f"https://inderaja.bmkg.go.id/IMAGE/HIMA/H08_EH_Indonesia.png?v={ts}"
         
         lokasi_info = {}
         flat_forecast = []
         
         if weather_data and 'lokasi' in weather_data:
             lokasi_info = weather_data['lokasi']
-            
-            # Logic parsing JSON BMKG (Flattening Nested List)
             if 'data' in weather_data and weather_data['data']:
-                # Data BMKG strukturnya: data -> [0] -> cuaca -> [list hari] -> [list jam]
                 cuaca_per_hari = weather_data['data'][0]['cuaca']
-                
-                # Loop setiap hari, lalu loop setiap jam
                 for hari in cuaca_per_hari:
                     for jam in hari:
                         flat_forecast.append(jam)
         
-        # Render template dengan data dinamis
         return render_template('components/tab_bmkg.html', 
                                lokasi=lokasi_info, 
                                forecasts=flat_forecast,
                                satellite=satellite_url,
-                               daftar_wilayah=WILAYAH_DICT, # Kirim daftar wilayah ke HTML
-                               current_kode=kode)           # Kirim kode yang sedang aktif
+                               daftar_wilayah=WILAYAH_DICT,
+                               current_kode=kode,
+                               current_nama=nama_kota)
     except Exception as e:
-        print(f"[ERR] Route bmkg_feed error: {e}")
-        return f"<div class='text-danger p-5'>SYSTEM ERROR: {e}</div>", 500
+        print(f"[ERR] BMKG Feed: {e}")
+        return f"<div class='text-danger p-5'>Error: {e}</div>"
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

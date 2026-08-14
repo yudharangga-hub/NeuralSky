@@ -20,6 +20,17 @@ Proyek ini mengintegrasikan beberapa komponen utama:
 - Sistem pakar meteorologi untuk analisis dampak cuaca T+1
 - Dashboard web berbasis Flask untuk inferensi dan analisis interaktif
 
+## Feature gallery
+
+| Feature | Preview |
+|---|---|
+| Dashboard utama | <img src="screenshots/dashboard_main.jpg" alt="Dashboard utama" width="500" /> |
+| Scan result | <img src="screenshots/feature_scan.jpg" alt="Scan result" width="500" /> |
+| Grad-CAM / XAI | <img src="screenshots/feature_xai.jpg" alt="Grad-CAM" width="500" /> |
+| Forensic evidence | <img src="screenshots/feature_forensic.jpg" alt="Forensic evidence" width="500" /> |
+| Metrics dashboard | <img src="screenshots/feature_metrics.jpg" alt="Metrics dashboard" width="500" /> |
+| Weather forecast | <img src="screenshots/feature_forecast.jpg" alt="Forecast simulation" width="500" /> |
+
 ## Research context
 
 Proyek ini dikembangkan sebagai bagian dari penelitian tesis yang berfokus pada klasifikasi awan dan analisis kondisi meteorologi berbasis citra digital. Tujuan utama penelitian adalah meningkatkan keandalan klasifikasi jenis awan dengan pendekatan deep learning yang dapat diinterpretasikan secara visual dan dikaitkan dengan konteks meteorologi.

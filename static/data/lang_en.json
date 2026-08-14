@@ -1,0 +1,76 @@
+{
+  "title": "Neural Sky",
+  "upload_button": "Upload Image",
+  "select_language": "Select language",
+  "no_file": "No file selected",
+  "no_image": "No image detected",
+  "report_title": "Neural Sky Report",
+  "file": "File",
+  "predicted_class": "Predicted class",
+  "confidence": "Confidence",
+  "cloud_coverage": "Cloud coverage (%)",
+  "oktas": "Oktas",
+  "download_report": "Download Report",
+  "analysis_results": "Analysis Results",
+  "models": "Models",
+  "heatmaps": "Heatmaps",
+  "evidence": "Evidence Samples",
+  "scan": ">> INFERENCE MODULE: Processes input imagery through 3 parallel architectures. Final decision uses Weighted Ensemble Voting to reduce bias.",
+  "xray": ">> EXPLAINABLE AI: Gradient-weighted Class Activation Mapping (Grad-CAM) visualization. Red highlights indicate primary model focus.",
+  "simulation": ">> PREDICTIVE SIMULATION: Expert rule-based system projecting weather potential for the next 60 minutes.",
+  "data": ">> EVALUATION METRICS: Confusion Matrix and Learning Curves. Click charts to enlarge.",
+  "light_mode": "Light Mode",
+  "dark_mode": "Dark Mode",
+  "system_status": "SYSTEM STATUS",
+  "signed_in_as": "Signed in as",
+  "logout": "Logout",
+  "target_scan": "TARGET SCAN",
+  "neural_vision": "NEURAL VISION",
+  "forensic": "FORENSIC",
+  "simulation_label": "SIMULATION",
+  "bmkg_data": "BMKG DATA",
+  "lab_metrics": "LAB METRICS",
+  "input_stream": "INPUT STREAM",
+  "click_to_upload": "CLICK TO UPLOAD",
+  "system_standby": "SYSTEM STANDBY"
+  ,"initiate_analysis":"INITIATE ANALYSIS",
+  "system_online_tracking":"SYSTEM: ONLINE | TRACKING: ACTIVE",
+  "final_decision":"FINAL DECISION:",
+  "print_report":"PRINT REPORT",
+  "awaiting_input":"Awaiting visual input...",
+  "probability":"PROBABILITY"
+  ,"tactical_analysis":"TACTICAL ANALYSIS"
+  ,"flight_risk":"FLIGHT RISK"
+  ,"rain_potential":"RAIN POTENTIAL"
+  ,"visibility":"VISIBILITY"
+  ,"operational_recommendation":"OPERATIONAL RECOMMENDATION"
+  ,"manual_verification":"MANUAL VERIFICATION BEFORE EXPORT:",
+  "final_decision":"FINAL DECISION:",
+  "print_report":"PRINT REPORT",
+  "override_note":"If manual override is not provided, the PDF will follow the AI recommendation."
+    ,"official_bmkg_feed":"OFFICIAL BMKG DATA FEED"
+    ,"live_connection":"LIVE CONNECTION"
+    ,"data_source":"Data source: BMKG"
+    ,"satellite":"SATELLITE"
+    ,"live_feed":"LIVE FEED"
+    ,"image_analysis":"IMAGE ANALYSIS"
+    ,"flight_safety_analysis":"FLIGHT SAFETY ANALYSIS:"
+    ,"status_now":"STATUS NOW:"
+    ,"waiting_server":"Waiting for server data..."
+    ,"loading_analysis":"Loading analysis data..."
+    ,"caution_ifr":"CAUTION (IFR)"
+    ,"safe_vfr":"SAFE (VFR)"
+    ,"t1_projection":"T+1 HOUR PROJECTION"
+    ,"now":"NOW"
+    ,"t1_estimate":"ESTIMATED T+1 HOUR"
+    ,"expert_system_label":"EXPERT SYSTEM / RULE-BASED MODEL:"
+    ,"awaiting_input_data":"AWAITING INPUT DATA"
+    ,"run_scan_to_simulate":"Run a scan to execute simulation."
+    ,"initializing_satellite_uplink":"INITIALIZING SATELLITE UPLINK..."
+    ,"establishing_satellite_uplink":"ESTABLISHING SATELLITE UPLINK..."
+    ,"failed_load_location":"Failed to load new location. Please check your internet connection."
+    ,"satellite_jabodetabek_desc":"Himawari-9 Enhanced Jabodetabek. Infrared 10.4µm enhanced view for Jabodetabek area.",
+    "satellite_indo_desc":"Infrared Enhanced (Indonesia). Shows cloud-top temperature; red indicates deep/thunderstorm clouds.",
+    "satellite_rain_desc":"Himawari-9 Rainfall Potential estimate. Green: Light, Yellow: Moderate, Red: Heavy."
+      ,"satellite_view":"SATELLITE VIEW"
+  }

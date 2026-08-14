@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Sky | Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/hud_style.css') }}">
+    {% include 'components/css_styles.html' %}
+    <style>
+        body {
+            background: radial-gradient(circle at top, rgba(0,255,255,0.18), transparent 30%),
+                        linear-gradient(180deg, #02080f 0%, #050e18 48%, #071017 100%);
+        }
+        .login-card {
+            background: rgba(9, 15, 26, 0.96);
+            border: 1px solid rgba(0, 242, 255, 0.16);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
+            backdrop-filter: blur(18px);
+            border-radius: 24px;
+            overflow: hidden;
+        }
+        .login-card .card-body {
+            padding: 36px 34px;
+        }
+        .login-card .brand-font {
+            font-size: 2.3rem;
+            letter-spacing: 3px;
+        }
+        .login-card .login-hint {
+            color: rgba(255,255,255,0.72);
+            font-size: 0.92rem;
+            letter-spacing: 0.08em;
+        }
+        .login-card .login-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 255, 255, 0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 11px 14px;
+            border-radius: 18px;
+            margin-bottom: 18px;
+        }
+        .login-card .login-badge i {
+            font-size: 1.15rem;
+            color: rgba(0, 242, 255, 0.92);
+        }
+        .login-card .feature-box {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 24px;
+            padding: 22px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+        }
+        .login-card .feature-item {
+            display: flex; align-items: center; gap: 12px;
+            color: #eaf7ff;
+            font-size: 0.98rem;
+        }
+        .login-card .feature-item i {
+            font-size: 1.05rem;
+            min-width: 26px;
+            color: #73e8ff;
+        }
+        .login-card .form-label {
+            color: rgba(255,255,255,0.76) !important;
+            font-size: 0.92rem;
+        }
+        .login-card .form-control {
+            color: #f7fbff;
+            background: rgba(5, 10, 18, 0.95);
+            border-color: rgba(255,255,255,0.12);
+            border-radius: 16px;
+            padding: 18px 16px;
+            box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.25);
+        }
+        .login-card .form-control:focus {
+            border-color: rgba(0, 242, 255, 0.4);
+            box-shadow: 0 0 0 0.2rem rgba(0, 242, 255, 0.12);
+        }
+        .login-card .form-control::placeholder {
+            color: rgba(255,255,255,0.55);
+        }
+        .login-card .btn-cyan {
+            background: linear-gradient(135deg, #2af9ff 0%, #0cb5ff 100%);
+            border: none;
+            color: #04101a;
+            padding: 16px 0;
+            font-size: 1rem;
+            letter-spacing: 1.3px;
+            border-radius: 14px;
+        }
+        .login-card .btn-cyan:hover {
+            background: linear-gradient(135deg, #6effff 0%, #2ec4ff 100%);
+            transform: translateY(-1px);
+        }
+        .login-card .text-dim {
+            color: rgba(219, 234, 255, 0.72) !important;
+        }
+        .login-card .top-icon {
+            width: 72px; height: 72px; display: grid; place-items: center;
+            border-radius: 50%; background: rgba(0, 242, 255, 0.08);
+            border: 1px solid rgba(0, 242, 255, 0.16); margin: 0 auto 20px;
+            box-shadow: 0 0 16px rgba(0, 242, 255, 0.12);
+        }
+        .login-card .top-icon i {
+            font-size: 2rem; color: var(--neon-cyan);
+            text-shadow: 0 0 20px rgba(0, 242, 255, 0.25);
+        }
+    </style>
+</head>
+<body>
+<div class="d-flex min-vh-100 align-items-center justify-content-center" style="background: radial-gradient(circle at top, rgba(0,255,255,0.18), transparent 30%), linear-gradient(180deg, rgba(4,22,40,0.95), #02060d 80%);">
+        <div class="card login-card shadow-lg" style="max-width: 480px; width: 100%;">
+            <div class="card-body">
+                <div class="top-icon">
+                    <i class="fas fa-cloud-sun"></i>
+                </div>
+                <div class="text-center mb-4">
+                    <h1 class="brand-font text-cyan mb-1">NEURAL SKY</h1>
+                    <p class="login-hint mb-0">BMKG AI Demo Login</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-item"><i class="fas fa-user-shield"></i><span><strong>Administrator</strong> - admin / admin</span></div>
+                    <div class="feature-item"><i class="fas fa-user"></i><span><strong>User</strong> - user / user</span></div>
+                </div>
+
+                {% if error %}
+                <div class="alert alert-danger rounded-4" role="alert">
+                    {{ error }}
+                </div>
+                {% endif %}
+
+                <form method="post" action="{{ url_for('login') }}">
+                    <div class="mb-3">
+                        <label class="form-label login-hint">Username</label>
+                        <input name="username" type="text" class="form-control form-control-lg bg-black text-white border-secondary" placeholder="admin atau user" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label login-hint">Password</label>
+                        <input name="password" type="password" class="form-control form-control-lg bg-black text-white border-secondary" placeholder="********" required>
+                    </div>
+                    <button type="submit" class="btn btn-cyan btn-lg w-100 text-dark fw-bold">Masuk ke Demo</button>
+                </form>
+
+                <div class="text-center mt-4 small text-dim">
+                    Sistem login sederhana untuk demo prototipe. Pastikan gunakan kredensial yang disediakan.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

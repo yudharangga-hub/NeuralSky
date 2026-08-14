@@ -8,3 +8,117 @@ d33c6ed2-5a40-48c7-bc72-80f4d0209fa7,5c01b03b-4360-4942-9d24-2c09bbc6bd77,Mobile
 f8f8f8e4-1c0b-4baa-b0ff-767c003300d8,ee1580b1-4782-4077-8593-65c66e595b1d,Simple CNN,v2.0,cumulus clouds,66.39,623.07,3,cumulus clouds,66.39,2026-04-19 13:35:11
 ccdcc3e5-7595-4766-99df-3861aad90e82,ee1580b1-4782-4077-8593-65c66e595b1d,MobileNetV2,finetuned_v1,cumulonimbus clouds,98.41,96.52,2,cumulonimbus clouds,98.41,2026-04-19 13:35:11
 d6e27689-747f-41a4-9a90-954f1365a6f6,ee1580b1-4782-4077-8593-65c66e595b1d,EfficientNetB0,finetuned_v1,cumulonimbus clouds,98.13,88.55,2,cumulonimbus clouds,98.13,2026-04-19 13:35:11
+eef2e3ea-3f4b-4d3c-b169-d5f81a339f3d,82d50942-5d8b-4943-99b1-383639988fbd,Simple CNN,v2.0,cumulonimbus clouds,100.0,1104.69,2,cumulonimbus clouds,100.0,2026-04-25 00:44:39
+1a446780-e323-4c9d-bb4b-1a07a6f61275,82d50942-5d8b-4943-99b1-383639988fbd,MobileNetV2,finetuned_v1,cumulonimbus clouds,99.99,160.88,2,cumulonimbus clouds,99.99,2026-04-25 00:44:39
+d7ff816c-534c-4f3f-9384-7da39d9c545c,82d50942-5d8b-4943-99b1-383639988fbd,EfficientNetB0,finetuned_v1,cumulonimbus clouds,99.55,138.61,2,cumulonimbus clouds,99.55,2026-04-25 00:44:39
+33e22a05-39ab-49f5-a9bf-0401b78a551a,804fb3ab-15ad-49e3-b590-04b44140297d,Simple CNN,v2.0,high cumuliform clouds,79.34,1235.07,4,high cumuliform clouds,79.34,2026-05-15 12:58:36
+d5ccfc6e-6d33-4275-8c46-d280cf3b4352,804fb3ab-15ad-49e3-b590-04b44140297d,MobileNetV2,finetuned_v1,high cumuliform clouds,52.93,187.38,4,high cumuliform clouds,52.93,2026-05-15 12:58:36
+161516e0-0c7e-4c34-870c-b22d3834adde,804fb3ab-15ad-49e3-b590-04b44140297d,EfficientNetB0,finetuned_v1,cumulonimbus clouds,69.24,130.83,2,cumulonimbus clouds,69.24,2026-05-15 12:58:36
+6393c50b-c421-4085-84a6-c15f9e1dd73d,3d1f5627-ac73-4130-bda9-e645ab33b633,Simple CNN,v2.0,cumulonimbus clouds,95.42,674.66,2,cumulonimbus clouds,95.42,2026-05-15 13:32:55
+3365cc79-84f7-405a-a6ef-a6b796727375,3d1f5627-ac73-4130-bda9-e645ab33b633,MobileNetV2,finetuned_v1,cumulonimbus clouds,97.61,96.53,2,cumulonimbus clouds,97.61,2026-05-15 13:32:55
+7a0c3456-53a8-4e92-83d3-2ef69dd71160,3d1f5627-ac73-4130-bda9-e645ab33b633,EfficientNetB0,finetuned_v1,cumulonimbus clouds,90.75,90.55,2,cumulonimbus clouds,90.75,2026-05-15 13:32:55
+5c317208-097b-4596-8857-bd4623d633d9,6e01dd00-3868-49c6-8ce4-4841cd77e409,Simple CNN,v2.0,cumulonimbus clouds,95.42,458.63,2,cumulonimbus clouds,95.42,2026-05-15 13:40:03
+dc508bd8-3c9d-4cd4-aa0b-71eac7e4891f,6e01dd00-3868-49c6-8ce4-4841cd77e409,MobileNetV2,finetuned_v1,cumulonimbus clouds,97.61,96.58,2,cumulonimbus clouds,97.61,2026-05-15 13:40:03
+4169d63f-09ae-4a70-ae0f-ea84f04a3cbf,6e01dd00-3868-49c6-8ce4-4841cd77e409,EfficientNetB0,finetuned_v1,cumulonimbus clouds,90.75,89.82,2,cumulonimbus clouds,90.75,2026-05-15 13:40:03
+b0bc11fc-444a-44b0-afa3-157cc783d048,81c76f38-fee9-4e80-b7fe-ed8e6ba7b76a,Simple CNN,v2.0,cumulus clouds,98.43,102.53,3,cumulus clouds,98.43,2026-05-15 13:40:41
+ee1d3b03-cca8-47db-a91c-f916ea27c4f8,81c76f38-fee9-4e80-b7fe-ed8e6ba7b76a,MobileNetV2,finetuned_v1,cumulonimbus clouds,69.5,68.53,2,cumulonimbus clouds,69.5,2026-05-15 13:40:41
+e779feda-54b9-4faf-aec7-9b7d8db601a4,81c76f38-fee9-4e80-b7fe-ed8e6ba7b76a,EfficientNetB0,finetuned_v1,cumulonimbus clouds,60.79,76.53,2,cumulonimbus clouds,60.79,2026-05-15 13:40:41
+2da47c9b-dbfa-42a6-9f5c-428dfdd5a001,b87a2c77-e6c2-4fc6-ac51-49a706ee6d00,Simple CNN,v2.0,cumulus clouds,98.43,100.54,3,cumulus clouds,98.43,2026-05-15 13:44:34
+2b4917e3-b48d-49ec-9918-abc89cbefa78,b87a2c77-e6c2-4fc6-ac51-49a706ee6d00,MobileNetV2,finetuned_v1,cumulonimbus clouds,69.5,67.54,2,cumulonimbus clouds,69.5,2026-05-15 13:44:34
+2bbb46ef-d211-417f-b891-556812591fe3,b87a2c77-e6c2-4fc6-ac51-49a706ee6d00,EfficientNetB0,finetuned_v1,cumulonimbus clouds,60.79,78.14,2,cumulonimbus clouds,60.79,2026-05-15 13:44:34
+105d2b82-c278-408a-aee7-f5b81a08e836,18a16b18-2e1b-472f-9fad-14ceec0b0cb8,Simple CNN,v2.0,cumulus clouds,98.43,290.44,3,cumulus clouds,98.43,2026-05-15 13:44:40
+cc7754c3-1f89-462c-8a5d-35101001e4f8,18a16b18-2e1b-472f-9fad-14ceec0b0cb8,MobileNetV2,finetuned_v1,cumulonimbus clouds,69.5,57.69,2,cumulonimbus clouds,69.5,2026-05-15 13:44:40
+2d234344-d0bb-45e8-8fc4-6d789adb2938,18a16b18-2e1b-472f-9fad-14ceec0b0cb8,EfficientNetB0,finetuned_v1,cumulonimbus clouds,60.79,88.61,2,cumulonimbus clouds,60.79,2026-05-15 13:44:40
+6e1a131e-dd5e-42ce-93ab-cd6cc0e1dac5,15983ce8-4c50-4669-a386-449c8a79bc50,Simple CNN,v2.0,cumulus clouds,98.43,458.43,3,cumulus clouds,98.43,2026-05-15 13:45:32
+c644ab11-cc1b-4157-8cfa-34bf85386385,15983ce8-4c50-4669-a386-449c8a79bc50,MobileNetV2,finetuned_v1,cumulonimbus clouds,69.5,90.53,2,cumulonimbus clouds,69.5,2026-05-15 13:45:32
+940368f1-8ef6-4a57-b7cc-d9bc93b22958,15983ce8-4c50-4669-a386-449c8a79bc50,EfficientNetB0,finetuned_v1,cumulonimbus clouds,60.79,102.51,2,cumulonimbus clouds,60.79,2026-05-15 13:45:32
+5a01b4b9-0125-422b-91a6-4c36719b9589,f535e85c-86d7-4d55-958f-8478bf0133d8,Simple CNN,v2.0,cumulonimbus clouds,51.28,777.72,2,cumulonimbus clouds,51.28,2026-05-15 13:54:28
+a3e6656e-4c96-4217-9e22-bd0e7df83006,f535e85c-86d7-4d55-958f-8478bf0133d8,MobileNetV2,finetuned_v1,cumulonimbus clouds,99.85,92.53,2,cumulonimbus clouds,99.85,2026-05-15 13:54:28
+0916ecb1-675f-44d2-a008-6b9c4ab57889,f535e85c-86d7-4d55-958f-8478bf0133d8,EfficientNetB0,finetuned_v1,cumulonimbus clouds,99.01,102.52,2,cumulonimbus clouds,99.01,2026-05-15 13:54:28
+266cf460-0e72-4363-bf95-7f3f6da0dbb3,5b5ca966-1129-4aa0-8218-c6989be1dbd7,Simple CNN,v2.0,cumulonimbus clouds,51.28,167.03,2,cumulonimbus clouds,51.28,2026-05-15 13:58:08
+8c7b441f-5bcd-43c0-9a83-345e679e93b6,5b5ca966-1129-4aa0-8218-c6989be1dbd7,MobileNetV2,finetuned_v1,cumulonimbus clouds,99.85,58.99,2,cumulonimbus clouds,99.85,2026-05-15 13:58:08
+bd3add3d-15d0-48a9-bbd8-eaab5d9e3e52,5b5ca966-1129-4aa0-8218-c6989be1dbd7,EfficientNetB0,finetuned_v1,cumulonimbus clouds,99.01,81.53,2,cumulonimbus clouds,99.01,2026-05-15 13:58:08
+f994758b-1798-487f-a6f1-a94f4c6c9177,ad1144c4-bff6-4967-9027-bb6b2651d213,Simple CNN,v2.0,cumulonimbus clouds,100.0,582.14,2,cumulonimbus clouds,100.0,2026-05-15 14:03:33
+23b2eb56-48a6-4094-b889-c1e485d72f54,ad1144c4-bff6-4967-9027-bb6b2651d213,MobileNetV2,finetuned_v1,cumulonimbus clouds,99.9,109.1,2,cumulonimbus clouds,99.9,2026-05-15 14:03:33
+327905e2-925e-4eed-959f-82007f735ed5,ad1144c4-bff6-4967-9027-bb6b2651d213,EfficientNetB0,finetuned_v1,cumulonimbus clouds,99.79,135.05,2,cumulonimbus clouds,99.79,2026-05-15 14:03:33
+1a434df4-9b6a-47aa-bd06-67e75526215f,3821fd85-7293-44c5-8889-723220b07c64,Simple CNN,v2.0,cumulonimbus clouds,100.0,630.8,2,cumulonimbus clouds,100.0,2026-05-15 17:47:10
+61c4407d-de94-4167-bb32-12dc6fd2436d,3821fd85-7293-44c5-8889-723220b07c64,MobileNetV2,finetuned_v1,cumulonimbus clouds,99.9,115.53,2,cumulonimbus clouds,99.9,2026-05-15 17:47:10
+f51fa734-7191-4a13-8f0c-68ae497c34b4,3821fd85-7293-44c5-8889-723220b07c64,EfficientNetB0,finetuned_v1,cumulonimbus clouds,99.79,127.17,2,cumulonimbus clouds,99.79,2026-05-15 17:47:10
+4edd4d03-50f3-46b1-a02c-d5f959d103bb,3d8cd052-477b-4b5c-86f3-d86ea27f21b4,Simple CNN,v2.0,cumulonimbus clouds,100.0,538.62,2,cumulonimbus clouds,100.0,2026-05-15 19:18:46
+dcca6d85-fc93-4e03-b96b-17f5386ae3e9,3d8cd052-477b-4b5c-86f3-d86ea27f21b4,MobileNetV2,finetuned_v1,cumulonimbus clouds,99.9,95.52,2,cumulonimbus clouds,99.9,2026-05-15 19:18:46
+3c75527a-a58a-44cc-9ca0-e178925ab52a,3d8cd052-477b-4b5c-86f3-d86ea27f21b4,EfficientNetB0,finetuned_v1,cumulonimbus clouds,99.79,101.11,2,cumulonimbus clouds,99.79,2026-05-15 19:18:46
+1a5b218d-2c99-4445-9316-9587433952d9,9dfe5a31-a60d-4e15-8bda-057ec59b47aa,Simple CNN,v2.0,cumulonimbus clouds,77.98,1168.86,2,cumulonimbus clouds,77.98,2026-05-24 11:14:19
+dc657fbe-2038-4443-82ef-ca7a5224302e,9dfe5a31-a60d-4e15-8bda-057ec59b47aa,MobileNetV2,finetuned_v1,cumulus clouds,40.39,169.51,3,cumulus clouds,40.39,2026-05-24 11:14:19
+27ef0931-9102-4a8f-a673-6188c8906d1c,9dfe5a31-a60d-4e15-8bda-057ec59b47aa,EfficientNetB0,finetuned_v1,cumulonimbus clouds,85.36,124.26,2,cumulonimbus clouds,85.36,2026-05-24 11:14:19
+9372bd1f-9727-41cf-b677-725f558cc139,8971fe80-a4f6-4e40-8bd7-941e69463648,Simple CNN,v2.0,clear sky,94.95,128.46,1,clear sky,94.95,2026-05-24 11:17:02
+5a17cd5a-61e2-486c-90da-4bdae0dd119e,8971fe80-a4f6-4e40-8bd7-941e69463648,MobileNetV2,finetuned_v1,cirriform clouds,100.0,62.45,0,cirriform clouds,100.0,2026-05-24 11:17:02
+d98b7f80-5338-4eea-9e69-97c5d1ee2b0e,8971fe80-a4f6-4e40-8bd7-941e69463648,EfficientNetB0,finetuned_v1,cirriform clouds,91.23,78.76,0,cirriform clouds,91.23,2026-05-24 11:17:02
+d3427517-cbb1-4083-8a44-75fe49887465,cb06b585-2879-4bbb-9cec-2b82f477d1e2,Simple CNN,v2.0,cumulus clouds,97.96,302.0,3,cumulus clouds,97.96,2026-05-24 13:34:11
+f60ef845-a7c5-4a3f-919b-4ed9e66e0367,cb06b585-2879-4bbb-9cec-2b82f477d1e2,MobileNetV2,finetuned_v1,cumulonimbus clouds,97.4,39.0,2,cumulonimbus clouds,97.4,2026-05-24 13:34:11
+73136084-bedb-443c-84ca-cdbb77545c29,cb06b585-2879-4bbb-9cec-2b82f477d1e2,EfficientNetB0,finetuned_v1,cumulus clouds,99.69,39.0,3,cumulus clouds,99.69,2026-05-24 13:34:11
+ba2ed86a-6927-4af4-b497-fc82c3091557,95c357c1-6c6a-43e5-82c8-f429136e093e,Simple CNN,v2.0,cumulus clouds,97.96,217.0,3,cumulus clouds,97.96,2026-05-24 13:54:51
+ab550228-218f-4818-b696-a5df26ee6478,95c357c1-6c6a-43e5-82c8-f429136e093e,MobileNetV2,finetuned_v1,cumulonimbus clouds,97.4,45.0,2,cumulonimbus clouds,97.4,2026-05-24 13:54:51
+7bb6238d-fe8e-4b23-a85e-29c206404bd2,95c357c1-6c6a-43e5-82c8-f429136e093e,EfficientNetB0,finetuned_v1,cumulus clouds,99.69,42.99,3,cumulus clouds,99.69,2026-05-24 13:54:51
+4fb774aa-957f-4c3e-adda-03e00e28a944,af141ede-5de6-44f7-89eb-e9daa5233d73,Simple CNN,v2.0,cumulus clouds,97.96,216.02,3,cumulus clouds,97.96,2026-05-24 16:26:09
+69535131-8974-4e23-9dad-18a07a61156f,af141ede-5de6-44f7-89eb-e9daa5233d73,MobileNetV2,finetuned_v1,cumulonimbus clouds,97.4,43.0,2,cumulonimbus clouds,97.4,2026-05-24 16:26:09
+a2803646-1691-476b-bcd6-dfee092b7572,af141ede-5de6-44f7-89eb-e9daa5233d73,EfficientNetB0,finetuned_v1,cumulus clouds,99.69,44.0,3,cumulus clouds,99.69,2026-05-24 16:26:09
+bd84274b-6eac-4913-a8a7-f6437aa976b0,30a64ead-3bde-46e5-a186-54a46315a070,Simple CNN,v2.0,cumulus clouds,97.96,658.38,3,cumulus clouds,97.96,2026-07-25 23:47:05
+3e0d841f-a28c-44be-8be2-624de753546d,30a64ead-3bde-46e5-a186-54a46315a070,MobileNetV2,finetuned_v1,cumulonimbus clouds,97.4,94.72,2,cumulonimbus clouds,97.4,2026-07-25 23:47:05
+d0ff3868-9725-4fb1-97d4-4f279be1ab7f,30a64ead-3bde-46e5-a186-54a46315a070,EfficientNetB0,finetuned_v1,cumulus clouds,99.69,57.06,3,cumulus clouds,99.69,2026-07-25 23:47:05
+480f0307-7837-4dc0-ae5f-b37a95a0a0bc,3422942d-92a4-42f7-b5ce-2f7fcdfb9f59,Simple CNN,v2.0,cumulus clouds,99.66,692.31,3,cumulus clouds,99.66,2026-08-07 14:25:22
+ea4979d1-8da7-4b77-a5bb-99f931c7e785,3422942d-92a4-42f7-b5ce-2f7fcdfb9f59,MobileNetV2,finetuned_v1,cumulonimbus clouds,98.2,147.53,2,cumulonimbus clouds,98.2,2026-08-07 14:25:22
+37e00766-7eed-4a82-87df-fd097f8403f3,3422942d-92a4-42f7-b5ce-2f7fcdfb9f59,EfficientNetB0,finetuned_v1,cumulonimbus clouds,98.82,153.54,2,cumulonimbus clouds,98.82,2026-08-07 14:25:22
+20d0dd71-5a4b-4122-a2bd-8cfa26845ee8,0640ec49-7e0b-4570-8e7b-55179d79ce4d,Simple CNN,v2.0,cumulus clouds,99.66,606.4,3,cumulus clouds,99.66,2026-08-07 14:27:58
+dae64bd7-ac9b-4111-a483-38ed4652b4c1,0640ec49-7e0b-4570-8e7b-55179d79ce4d,MobileNetV2,finetuned_v1,cumulonimbus clouds,98.2,154.12,2,cumulonimbus clouds,98.2,2026-08-07 14:27:58
+bbf25b2c-18c2-4f3f-963d-5201f8b50f50,0640ec49-7e0b-4570-8e7b-55179d79ce4d,EfficientNetB0,finetuned_v1,cumulonimbus clouds,98.82,155.64,2,cumulonimbus clouds,98.82,2026-08-07 14:27:58
+ba46534c-b4ba-45c0-91cd-383c721f3cf8,e0d215f2-95e4-4fed-9c44-c22decb6ca36,Simple CNN,v2.0,cumulus clouds,99.66,650.37,3,cumulus clouds,99.66,2026-08-07 14:42:37
+ae37165f-9b09-4a1d-a0d9-be6c8efd4a63,e0d215f2-95e4-4fed-9c44-c22decb6ca36,MobileNetV2,finetuned_v1,cumulonimbus clouds,98.2,137.52,2,cumulonimbus clouds,98.2,2026-08-07 14:42:37
+c2fce9b1-4a20-4000-b11f-5a44d32b7be3,e0d215f2-95e4-4fed-9c44-c22decb6ca36,EfficientNetB0,finetuned_v1,cumulonimbus clouds,98.82,141.72,2,cumulonimbus clouds,98.82,2026-08-07 14:42:37
+74005c12-84ce-4fca-9894-12860498d89a,465bce43-9766-47f3-8206-01ef9e3e75cf,Simple CNN,v2.0,cumulus clouds,99.66,26.01,3,cumulus clouds,99.66,2026-08-07 14:46:44
+1fc5b729-e19b-48ab-9689-f464cccc083b,465bce43-9766-47f3-8206-01ef9e3e75cf,MobileNetV2,finetuned_v1,cumulonimbus clouds,98.2,88.52,2,cumulonimbus clouds,98.2,2026-08-07 14:46:44
+bf43f938-0708-4908-80c5-034f701052aa,465bce43-9766-47f3-8206-01ef9e3e75cf,EfficientNetB0,finetuned_v1,cumulonimbus clouds,98.82,112.38,2,cumulonimbus clouds,98.82,2026-08-07 14:46:44
+fba03868-9e78-4d7e-9a2c-84333f416e06,8d2a1312-75a7-4af2-aee8-8d03b75d6378,Simple CNN,v2.0,cumulus clouds,99.66,614.06,3,cumulus clouds,99.66,2026-08-07 14:51:24
+dd201fec-fb86-4e74-a24a-641abc8d52d0,8d2a1312-75a7-4af2-aee8-8d03b75d6378,MobileNetV2,finetuned_v1,cumulonimbus clouds,98.2,158.85,2,cumulonimbus clouds,98.2,2026-08-07 14:51:24
+191027ca-5638-45ea-bd4a-355ccf04e59f,8d2a1312-75a7-4af2-aee8-8d03b75d6378,EfficientNetB0,finetuned_v1,cumulonimbus clouds,98.82,150.52,2,cumulonimbus clouds,98.82,2026-08-07 14:51:24
+2ab87857-56d7-4e1c-a1f1-04b4af064d66,715d50e5-dfe2-4ee7-bb88-12f82de158d0,Simple CNN,v2.0,cumulus clouds,99.66,607.89,3,cumulus clouds,99.66,2026-08-07 15:14:02
+8e76048a-4f2d-4da4-bb81-9e90c61dfaea,715d50e5-dfe2-4ee7-bb88-12f82de158d0,MobileNetV2,finetuned_v1,cumulonimbus clouds,98.2,143.06,2,cumulonimbus clouds,98.2,2026-08-07 15:14:02
+660ee7b9-1c9d-47ad-b83e-4e64d7d08f7c,715d50e5-dfe2-4ee7-bb88-12f82de158d0,EfficientNetB0,finetuned_v1,cumulonimbus clouds,98.82,142.53,2,cumulonimbus clouds,98.82,2026-08-07 15:14:02
+8baff083-acc3-45d8-b9ea-40febdb3e802,c01bc921-5153-4397-b0f1-09a43b56c21d,Simple CNN,v2.0,cumulus clouds,99.66,646.26,3,cumulus clouds,99.66,2026-08-07 15:20:56
+a9832430-2c46-48c8-b071-4c34af48d878,c01bc921-5153-4397-b0f1-09a43b56c21d,MobileNetV2,finetuned_v1,cumulonimbus clouds,98.2,132.52,2,cumulonimbus clouds,98.2,2026-08-07 15:20:56
+c3516d3b-5917-48fc-ae23-6da62b2221ff,c01bc921-5153-4397-b0f1-09a43b56c21d,EfficientNetB0,finetuned_v1,cumulonimbus clouds,98.82,140.53,2,cumulonimbus clouds,98.82,2026-08-07 15:20:56
+5d1007c6-072d-4a36-85e4-1cb39014f982,fb72b124-88db-4ca7-8ab0-5f082efba043,Simple CNN,v2.0,cumulus clouds,99.66,791.73,3,cumulus clouds,99.66,2026-08-07 15:57:41
+5c81f06c-09b1-4654-9c74-b14c423a5abe,fb72b124-88db-4ca7-8ab0-5f082efba043,MobileNetV2,finetuned_v1,cumulonimbus clouds,98.2,149.56,2,cumulonimbus clouds,98.2,2026-08-07 15:57:41
+5ac827d4-605c-484f-8364-afdd0635141b,fb72b124-88db-4ca7-8ab0-5f082efba043,EfficientNetB0,finetuned_v1,cumulonimbus clouds,98.82,143.57,2,cumulonimbus clouds,98.82,2026-08-07 15:57:41
+7be407d6-50f2-4cee-b594-d4151ec5327b,ed030614-a9aa-4ffc-8d88-4c84c734e6a7,Simple CNN,v2.0,cumulus clouds,99.66,269.54,3,cumulus clouds,99.66,2026-08-07 23:45:48
+aedd5fa3-071e-4d7b-9839-b6e49416ca65,ed030614-a9aa-4ffc-8d88-4c84c734e6a7,MobileNetV2,finetuned_v1,cumulonimbus clouds,98.2,48.51,2,cumulonimbus clouds,98.2,2026-08-07 23:45:48
+7235cd47-c4c0-447c-9c6c-96d226ac832e,ed030614-a9aa-4ffc-8d88-4c84c734e6a7,EfficientNetB0,finetuned_v1,cumulonimbus clouds,98.82,50.0,2,cumulonimbus clouds,98.82,2026-08-07 23:45:48
+46e9ea6d-be7f-4799-9357-ccdcaa26a69e,ecc44b28-fc2e-4e99-971d-ce90c162b87b,Simple CNN,v2.0,cumulus clouds,99.66,257.08,3,cumulus clouds,99.66,2026-08-08 01:45:42
+3a9d8336-a88c-4db6-b946-95a606a4b1c4,ecc44b28-fc2e-4e99-971d-ce90c162b87b,MobileNetV2,finetuned_v1,cumulonimbus clouds,98.2,51.0,2,cumulonimbus clouds,98.2,2026-08-08 01:45:42
+ece71d78-b8a7-4079-b584-133c47a6df37,ecc44b28-fc2e-4e99-971d-ce90c162b87b,EfficientNetB0,finetuned_v1,cumulonimbus clouds,98.82,46.01,2,cumulonimbus clouds,98.82,2026-08-08 01:45:42
+7fc691ed-f7a2-4832-85fc-1b77a496251d,6deb0d2c-a497-4418-a001-4e11d12b10cf,Simple CNN,v2.0,cumulus clouds,99.66,267.21,3,cumulus clouds,99.66,2026-08-08 01:48:34
+73d7e8a5-9595-4203-855a-af169f852581,6deb0d2c-a497-4418-a001-4e11d12b10cf,MobileNetV2,finetuned_v1,cumulonimbus clouds,98.2,46.0,2,cumulonimbus clouds,98.2,2026-08-08 01:48:34
+5689f14b-3458-4352-b4c3-2e4d50dfe3b9,6deb0d2c-a497-4418-a001-4e11d12b10cf,EfficientNetB0,finetuned_v1,cumulonimbus clouds,98.82,45.01,2,cumulonimbus clouds,98.82,2026-08-08 01:48:34
+d0d714aa-23f0-48d4-a26e-167cd85674ea,6ae450f9-d62d-4991-9ac1-e505785826b6,Simple CNN,v2.0,high cumuliform clouds,100.0,15.0,4,high cumuliform clouds,100.0,2026-08-08 01:56:53
+a32804b7-c9fa-42f1-ad55-9c137af7b6a2,6ae450f9-d62d-4991-9ac1-e505785826b6,MobileNetV2,finetuned_v1,high cumuliform clouds,100.0,32.0,4,high cumuliform clouds,100.0,2026-08-08 01:56:53
+df9fa7e1-40a7-4105-b7f2-4df32fc6390a,6ae450f9-d62d-4991-9ac1-e505785826b6,EfficientNetB0,finetuned_v1,high cumuliform clouds,97.79,43.0,4,high cumuliform clouds,97.79,2026-08-08 01:56:53
+a2fae760-b022-42e0-b258-c47ef6120979,cb59e371-17b1-4010-9040-865b5776a7d6,Simple CNN,v2.0,high cumuliform clouds,100.0,279.55,4,high cumuliform clouds,100.0,2026-08-08 04:43:25
+b0bee661-adea-40c3-be65-1760593b53e6,cb59e371-17b1-4010-9040-865b5776a7d6,MobileNetV2,finetuned_v1,high cumuliform clouds,100.0,52.0,4,high cumuliform clouds,100.0,2026-08-08 04:43:25
+dff2e76e-60cb-4c8b-ae63-85d381c6f9c8,cb59e371-17b1-4010-9040-865b5776a7d6,EfficientNetB0,finetuned_v1,high cumuliform clouds,97.79,49.51,4,high cumuliform clouds,97.79,2026-08-08 04:43:25
+01fe52ee-0b96-48a2-b4dc-55274e1d2107,c43db38b-86a8-4db9-a1e4-781bf7720883,Simple CNN,v2.0,high cumuliform clouds,100.0,11.0,4,high cumuliform clouds,100.0,2026-08-08 05:32:10
+20825221-dcde-47d8-99e1-57af0ba15c6c,c43db38b-86a8-4db9-a1e4-781bf7720883,MobileNetV2,finetuned_v1,high cumuliform clouds,100.0,32.03,4,high cumuliform clouds,100.0,2026-08-08 05:32:10
+b1902b4b-c3d5-491e-b7c7-475acbda7ab0,c43db38b-86a8-4db9-a1e4-781bf7720883,EfficientNetB0,finetuned_v1,high cumuliform clouds,97.79,52.52,4,high cumuliform clouds,97.79,2026-08-08 05:32:10
+819475f7-9768-4753-a3c8-78ebbd59d769,84f5486a-3407-47a3-87e5-e4f11c3f72f9,Simple CNN,v2.0,high cumuliform clouds,100.0,298.55,4,high cumuliform clouds,100.0,2026-08-08 05:37:52
+ea7c309a-21fa-4e74-9833-9571041c381b,84f5486a-3407-47a3-87e5-e4f11c3f72f9,MobileNetV2,finetuned_v1,high cumuliform clouds,100.0,56.09,4,high cumuliform clouds,100.0,2026-08-08 05:37:52
+fde8928b-c0e3-4ac2-9ebd-ab9d7402c061,84f5486a-3407-47a3-87e5-e4f11c3f72f9,EfficientNetB0,finetuned_v1,high cumuliform clouds,97.79,53.0,4,high cumuliform clouds,97.79,2026-08-08 05:37:52
+f4312df6-3845-4d2d-b4bf-9ca4bb1ad750,a7e9d58e-c19d-4a51-92fa-98d078774197,Simple CNN,v2.0,high cumuliform clouds,100.0,333.59,4,high cumuliform clouds,100.0,2026-08-08 06:08:53
+da8be500-9057-4de8-8eab-90d3975df8e2,a7e9d58e-c19d-4a51-92fa-98d078774197,MobileNetV2,finetuned_v1,high cumuliform clouds,100.0,54.52,4,high cumuliform clouds,100.0,2026-08-08 06:08:53
+e0cc9cf3-2ece-46bb-ab15-c6d184b2ad88,a7e9d58e-c19d-4a51-92fa-98d078774197,EfficientNetB0,finetuned_v1,high cumuliform clouds,97.79,46.01,4,high cumuliform clouds,97.79,2026-08-08 06:08:53
+cfbfa37b-7cc2-4db4-8ac1-6438d563e4ac,234ba7da-0eef-4bf5-bf42-e98992fa95e5,Simple CNN,v2.0,high cumuliform clouds,100.0,11.0,4,high cumuliform clouds,100.0,2026-08-08 06:34:39
+229cc981-7fe0-48b9-b742-709b53641a9e,234ba7da-0eef-4bf5-bf42-e98992fa95e5,MobileNetV2,finetuned_v1,high cumuliform clouds,100.0,47.53,4,high cumuliform clouds,100.0,2026-08-08 06:34:39
+c75e5dca-d8ac-48f7-ab02-1ec69388688e,234ba7da-0eef-4bf5-bf42-e98992fa95e5,EfficientNetB0,finetuned_v1,high cumuliform clouds,97.79,55.1,4,high cumuliform clouds,97.79,2026-08-08 06:34:39
+f0efbb63-7b99-4b6a-9191-ceb2a3ed9e23,5f1175cc-9ac3-4fea-9e8c-2fc6569eb124,Simple CNN,v2.0,high cumuliform clouds,100.0,576.21,4,high cumuliform clouds,100.0,2026-08-11 12:57:35
+8081352f-0200-4f8a-8746-d929070387ed,5f1175cc-9ac3-4fea-9e8c-2fc6569eb124,MobileNetV2,finetuned_v1,high cumuliform clouds,100.0,109.74,4,high cumuliform clouds,100.0,2026-08-11 12:57:35
+6b59dc7f-097d-4975-bb74-c337367f3bbc,5f1175cc-9ac3-4fea-9e8c-2fc6569eb124,EfficientNetB0,finetuned_v1,high cumuliform clouds,97.79,61.11,4,high cumuliform clouds,97.79,2026-08-11 12:57:35
+80202cc7-372b-4643-91f8-a397dc64000a,58d73c49-18c2-49c4-aa48-419b873a2fe4,Simple CNN,v2.0,high cumuliform clouds,100.0,1209.52,4,high cumuliform clouds,100.0,2026-08-14 13:16:27
+e2613831-a814-4772-b935-e9f374344bb7,58d73c49-18c2-49c4-aa48-419b873a2fe4,MobileNetV2,finetuned_v1,high cumuliform clouds,100.0,213.04,4,high cumuliform clouds,100.0,2026-08-14 13:16:27
+8a93905e-b170-4a4f-92c6-7c146f0766ab,58d73c49-18c2-49c4-aa48-419b873a2fe4,EfficientNetB0,finetuned_v1,high cumuliform clouds,97.79,138.53,4,high cumuliform clouds,97.79,2026-08-14 13:16:27

@@ -6,15 +6,17 @@ import torch
 import torch.nn as nn
 from torchvision import models, transforms
 from PIL import Image
-from flask import Flask, render_template, request, url_for, redirect, send_file
+from flask import Flask, render_template, request, url_for, redirect, send_file, session
 import numpy as np
 import cv2
 import requests  # Library untuk akses data BMKG
+import json
 import urllib3
 import csv
 from datetime import datetime, timezone
 from datetime import timedelta
 from pathlib import Path
+from functools import wraps
 
 # Nonaktifkan peringatan SSL untuk request ke BMKG (agar lancar di local)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -32,12 +34,18 @@ except ImportError:
     print("[WARN] Modul Impact/Report tidak ditemukan.")
 
 app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY', 'neural_sky_demo_secret_2026')
+
+USERS = {
+    'admin': {'password': 'admin', 'role': 'admin'},
+    'user': {'password': 'user', 'role': 'user'}
+}
 
 # --- KONFIGURASI FOLDER ---
 UPLOAD_FOLDER = 'static/uploads'
 CAM_FOLDER = 'static/heatmaps'
 MODEL_FOLDER = 'models_pytorch' 
-TRAIN_DIR = 'dataset/clouds_train'
+TRAIN_DIR = 'dataset/split_80_20/train'
 DB_FOLDER = 'static/data/database'  # Folder untuk database CSV
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -49,6 +57,14 @@ app.config['DB_FOLDER'] = DB_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(CAM_FOLDER, exist_ok=True)
 os.makedirs(DB_FOLDER, exist_ok=True)
+
+def login_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not session.get('username'):
+            return redirect(url_for('login'))
+        return func(*args, **kwargs)
+    return wrapper
 
 # --- PROFESSIONAL DATABASE CSV SYSTEM ---
 # Menggunakan ISO 8601 timestamp, UUID, dan metadata lengkap
@@ -313,7 +329,9 @@ def load_models():
     # 1. Simple CNN
     try:
         model = SimpleCNN(NUM_CLASSES)
-        path = os.path.join(MODEL_FOLDER, 'simple_cnn_v2.pth')
+        path = os.path.join(MODEL_FOLDER, 'simple_cnn_v2_80_20.pth')
+        if not os.path.exists(path):
+            path = os.path.join(MODEL_FOLDER, 'simple_cnn_v2.pth')
         if os.path.exists(path):
             model.load_state_dict(torch.load(path, map_location=device))
             model.to(device).eval()
@@ -324,7 +342,9 @@ def load_models():
     try:
         model = models.mobilenet_v2(weights=None)
         model.classifier[1] = nn.Linear(model.last_channel, NUM_CLASSES)
-        path = os.path.join(MODEL_FOLDER, 'mobilenet_finetuned.pth')
+        path = os.path.join(MODEL_FOLDER, 'mobilenet_finetuned_80_20.pth')
+        if not os.path.exists(path):
+            path = os.path.join(MODEL_FOLDER, 'mobilenet_finetuned.pth')
         if os.path.exists(path):
             model.load_state_dict(torch.load(path, map_location=device))
             model.to(device).eval()
@@ -335,7 +355,9 @@ def load_models():
     try:
         model = models.efficientnet_b0(weights=None)
         model.classifier[1] = nn.Linear(1280, NUM_CLASSES)
-        path = os.path.join(MODEL_FOLDER, 'efficientnet_finetuned.pth')
+        path = os.path.join(MODEL_FOLDER, 'efficientnet_finetuned_80_20.pth')
+        if not os.path.exists(path):
+            path = os.path.join(MODEL_FOLDER, 'efficientnet_finetuned.pth')
         if os.path.exists(path):
             model.load_state_dict(torch.load(path, map_location=device))
             model.to(device).eval()
@@ -391,9 +413,214 @@ def get_satellite_image():
     # URL Statis Citra Satelit Himawari-9 (IR Enhanced)
     return "https://inderaja.bmkg.go.id/IMAGE/HIMA/H08_EH_Indonesia.png"
 
+# --- ROUTE LOGIN ---
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if session.get('username'):
+        return redirect(url_for('index'))
+
+    error = None
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '').strip()
+        user = USERS.get(username)
+
+        if user and user['password'] == password:
+            session['username'] = username
+            session['role'] = user['role']
+            return redirect(url_for('index'))
+        else:
+            error = 'Username atau password tidak valid. Gunakan admin/admin atau user/user.'
+
+    return render_template('login.html', error=error)
+
+
+# --- BILINGUAL SUPPORT: Load language JSON files ---
+def load_language(lang_code: str):
+    """Load language JSON from static/data/lang_{code}.json"""
+    if lang_code not in ('en', 'id'):
+        lang_code = 'en'
+    path = os.path.join('static', 'data', f'lang_{lang_code}.json')
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def perform_analysis(filepath, filename=None):
+    """Run cloud analysis + model inference and return structured results."""
+    results = []
+    heatmap_data = {}
+    final_decision = None
+    impact_info = None
+    evidence_files = []
+    cloud_coverage = 0
+    oktas_val = 0
+    total_processing_time = 0
+
+    try:
+        cloud_coverage, oktas_val = analyze_cloud_properties(filepath)
+
+        img_pil = Image.open(filepath).convert('RGB')
+        img_tensor = val_transform(img_pil).unsqueeze(0).to(device)
+        vote_box = {}
+
+        for name, model in models_dict.items():
+            try:
+                start_time = time.time()
+                with torch.no_grad():
+                    outputs = model(img_tensor)
+                    probabilities = torch.nn.functional.softmax(outputs, dim=1)
+
+                score, idx = torch.max(probabilities, 1)
+                idx = idx.item()
+                score = score.item()
+                prediction = CLASS_NAMES[idx]
+
+                latency = round((time.time() - start_time) * 1000, 2)
+                results.append({'model': name, 'prediction': prediction, 'confidence': round(score * 100, 2), 'latency': latency})
+                total_processing_time += latency
+
+                if prediction not in vote_box: vote_box[prediction] = []
+                vote_box[prediction].append(score)
+
+                # Grad-CAM (best-effort)
+                target_layer = None
+                if name == 'Simple CNN': target_layer = model.features[-2]
+                elif name == 'MobileNetV2': target_layer = model.features[-1]
+                elif name == 'EfficientNetB0': target_layer = model.features[-1]
+
+                if target_layer and filename:
+                    cam_extractor = GradCAM(model, target_layer)
+                    heatmap = cam_extractor(img_tensor, class_idx=idx)
+                    cam_path = os.path.join(app.config['CAM_FOLDER'], f"cam_{name}_{filename}")
+                    save_gradcam(filepath, heatmap, cam_path)
+                    heatmap_data[name] = {'img': url_for('static', filename=f'heatmaps/cam_{name}_{filename}'), 'conf': round(score*100, 2), 'pred': prediction}
+            except Exception as e:
+                print(f"[ERR] Inference {name}: {e}")
+
+        # Ensemble Weighted Voting
+        best_class = None
+        highest_score = -1
+        for cls, scores in vote_box.items():
+            weighted = (sum(scores)/len(scores)) + (len(scores) * 0.15)
+            if weighted > highest_score:
+                highest_score = weighted
+                best_class = cls
+
+        if best_class:
+            final_decision = {'class': best_class, 'confidence': round((sum(vote_box[best_class])/len(vote_box[best_class])) * 100, 2)}
+            if REPORT_FEATURE_ACTIVE:
+                try:
+                    impact_info = get_weather_impact(best_class)
+                except:
+                    impact_info = None
+            # evidence sampling (best-effort)
+            try:
+                class_path = os.path.join(app.config['TRAIN_DIR'], best_class)
+                if os.path.exists(class_path):
+                    all_imgs = [i for i in os.listdir(class_path) if i.lower().endswith(('.png','.jpg'))]
+                    evidence_files = [f"{best_class}/{i}" for i in random.sample(all_imgs, min(len(all_imgs), 3))]
+            except:
+                evidence_files = []
+
+    except Exception as e:
+        print(f"[ERR] perform_analysis: {e}")
+
+    return {
+        'results': results,
+        'final_decision': final_decision,
+        'heatmap_data': heatmap_data,
+        'impact_info': impact_info,
+        'evidence_files': evidence_files,
+        'cloud_coverage': cloud_coverage,
+        'oktas_val': oktas_val,
+        'processing_time': total_processing_time
+    }
+
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
+
+@app.route('/neural_sky', methods=['GET', 'POST'])
+@login_required
+def neural_sky():
+    lang = request.args.get('lang', 'en')
+    texts = load_language(lang)
+    report_file = None
+    analysis = None
+
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return render_template('neural_sky.html', texts=texts, error=texts.get('no_file', 'No file'))
+        file = request.files['file']
+        if file.filename == '':
+            return render_template('neural_sky.html', texts=texts, error=texts.get('no_file', 'No file'))
+
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        original_filename = file.filename
+        ext = os.path.splitext(original_filename)[1].lower()
+        if ext == '': ext = '.jpg'
+        filename = f"cloud_{timestamp}{ext}"
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+
+        # Log upload minimal metadata
+        try:
+            session_id = request.headers.get('X-Session-ID', str(uuid.uuid4()))
+            log_upload(session_id, original_filename, filename, filepath, os.path.getsize(filepath), 'image', *Image.open(filepath).size)
+        except:
+            pass
+
+        analysis = perform_analysis(filepath, filename)
+
+    return render_template('neural_sky.html', texts=texts, analysis=analysis, lang=lang)
+
+
+@app.route('/neural_sky/report', methods=['POST'])
+@login_required
+def neural_sky_report():
+    lang = request.form.get('lang', 'en')
+    texts = load_language(lang)
+    # Expect simple fields posted from client
+    filename = request.form.get('filename')
+    classname = request.form.get('class')
+    confidence = request.form.get('confidence')
+    coverage = request.form.get('coverage')
+    oktas = request.form.get('oktas')
+
+    # Build a simple translated text report
+    lines = []
+    lines.append(texts.get('report_title', 'Neural Sky Report'))
+    lines.append('---')
+    lines.append(f"{texts.get('file', 'File')}: {filename}")
+    lines.append(f"{texts.get('predicted_class', 'Predicted class')}: {classname}")
+    lines.append(f"{texts.get('confidence', 'Confidence')}: {confidence}")
+    lines.append(f"{texts.get('cloud_coverage', 'Cloud coverage')}: {coverage}")
+    lines.append(f"{texts.get('oktas', 'Oktas')}: {oktas}")
+    report_text = '\n'.join(lines)
+
+    # Save to temp file and send
+    tmp_path = os.path.join('static', 'data', f"report_{int(time.time())}.txt")
+    with open(tmp_path, 'w', encoding='utf-8') as f:
+        f.write(report_text)
+
+    return send_file(tmp_path, as_attachment=True, download_name=f"NeuralSky_Report_{filename or 'result'}.txt")
+
+
 # --- ROUTE UTAMA (DASHBOARD) ---
 @app.route('/', methods=['GET', 'POST'])
+@login_required
 def index():
+    # language preference from session or query
+    lang = request.args.get('lang') or session.get('lang', 'id')
+    session['lang'] = lang
+    texts = load_language(lang)
     # Inisialisasi variabel untuk tracking
     current_upload_id = None
     current_analysis_id = None
@@ -608,32 +835,56 @@ def index():
                            final_decision=final_decision, impact_info=impact_info,
                            heatmap_data=heatmap_data, evidence_files=evidence_files,
                            class_names=CLASS_NAMES, report_active=REPORT_FEATURE_ACTIVE,
-                           cloud_coverage=cloud_coverage, oktas_val=oktas_val)
+                           cloud_coverage=cloud_coverage, oktas_val=oktas_val,
+                           user=session.get('username'), role=session.get('role'),
+                           texts=texts, lang=lang)
 
 # --- ROUTE UTILS ---
 @app.route('/dataset_image/<path:filename>')
+@login_required
 def dataset_image(filename):
     return send_file(os.path.join(app.config['TRAIN_DIR'], filename))
 
 @app.route('/generate_report', methods=['POST'])
+@login_required
 def generate_report():
     if not REPORT_FEATURE_ACTIVE: return "Feature Disabled", 500
     filename = request.form.get('filename')
+    ai_recommendation = request.form.get('ai_recommendation')
     corrected_class = request.form.get('corrected_class')
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    
-    confidence_str = "MANUAL VALIDATION"
+
+    if not corrected_class or corrected_class.strip() == '':
+        corrected_class = ai_recommendation or 'clear sky'
+
+    # Jika pengguna tidak melakukan override manual, laporan mengikuti rekomendasi AI.
+    if corrected_class == ai_recommendation:
+        confidence_str = "AI RECOMMENDATION"
+    else:
+        confidence_str = "MANUAL VALIDATION"
+
     coverage, oktas = analyze_cloud_properties(filepath)
     impacts = get_weather_impact(corrected_class)
-    
+
     heatmap_path = f"static/heatmaps/cam_EfficientNetB0_{filename}"
     if not os.path.exists(heatmap_path): heatmap_path = filepath
-    
+
     pdf_path = create_pdf(filename, corrected_class, confidence_str, impacts, heatmap_path, coverage, oktas)
     return send_file(pdf_path, as_attachment=True, download_name=f"Laporan_{corrected_class}_{filename.split('.')[0]}.pdf")
 
+
+@app.route('/set_lang')
+def set_lang():
+    lang = request.args.get('lang')
+    if lang in ('en', 'id'):
+        session['lang'] = lang
+    # redirect back to referrer or index
+    ref = request.headers.get('Referer') or url_for('index')
+    return redirect(ref)
+
 # --- ROUTE DATA BMKG (UPDATED WITH DROPDOWN LOGIC) ---
 @app.route('/bmkg_feed')
+@login_required
 def bmkg_feed():
     try:
         # GANTI DEFAULT DARI PAMULANG KE KEMAYORAN (31.71.03.1001)

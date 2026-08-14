@@ -5,8 +5,8 @@
         
         {% if impact_info %}
         <div class="text-center mb-5">
-            <h3 class="brand-font text-cyan">T+1 HOUR PROJECTION</h3>
-            <p class="tech-font text-dim">Simulasi perkembangan cuaca berbasis morfologi awan saat ini.</p>
+            <h3 class="brand-font text-cyan">{{ texts.get('t1_projection', 'T+1 HOUR PROJECTION') }}</h3>
+            <p class="tech-font text-dim">{{ texts.get('run_scan_to_simulate', 'Simulasi perkembangan cuaca berbasis morfologi awan saat ini.') }}</p>
         </div>
 
         <div class="position-relative my-5" style="height: 100px;">
@@ -16,7 +16,7 @@
                 <div class="bg-black border border-cyan rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 40px; height: 40px; box-shadow: 0 0 15px var(--neon-cyan);">
                     <i class="fas fa-camera text-cyan"></i>
                 </div>
-                <small class="tech-font text-white">SEKARANG</small>
+                <small class="tech-font text-white">{{ texts.get('now', 'SEKARANG') }}</small>
             </div>
 
             <div class="position-absolute top-50 start-50 translate-middle text-center">
@@ -27,7 +27,7 @@
                 <div class="bg-black border border-purple rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 40px; height: 40px; box-shadow: 0 0 15px var(--neon-purple);">
                     <i class="fas fa-clock text-purple"></i>
                 </div>
-                <small class="tech-font text-white">ESTIMASI T+1 JAM</small>
+                <small class="tech-font text-white">{{ texts.get('t1_estimate', 'ESTIMASI T+1 JAM') }}</small>
             </div>
         </div>
 
@@ -35,7 +35,7 @@
             <div class="d-flex align-items-start">
                 <i class="fas fa-robot text-purple fa-2x me-3 mt-1"></i>
                 <div>
-                    <h5 class="brand-font text-white mb-2">AI PREDICTIVE MODEL:</h5>
+                    <h5 class="brand-font text-white mb-2">{{ texts.get('expert_system_label', 'EXPERT SYSTEM / RULE-BASED MODEL:') }}</h5>
                     <p class="tech-font text-cyan fs-5 mb-0" style="line-height: 1.5;">
                         "{{ impact_info.simulasi }}"
                     </p>
@@ -53,8 +53,8 @@
         {% else %}
         <div class="text-center py-5">
             <i class="fas fa-hourglass-half fa-3x text-secondary mb-3"></i>
-            <h5 class="text-dim brand-font">AWAITING INPUT DATA</h5>
-            <p class="tech-font">Lakukan scanning untuk menjalankan simulasi.</p>
+            <h5 class="text-dim brand-font">{{ texts.get('awaiting_input_data', 'AWAITING INPUT DATA') }}</h5>
+            <p class="tech-font">{{ texts.get('run_scan_to_simulate', 'Lakukan scanning untuk menjalankan simulasi.') }}</p>
         </div>
         {% endif %}
 

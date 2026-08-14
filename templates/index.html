@@ -18,41 +18,59 @@
 
     <canvas id="neuronCanvas"></canvas>
 
-    <<div class="border-bottom border-secondary bg-black bg-opacity-90 py-3 mb-5 shadow-lg" style="position: relative; z-index: 10; box-shadow: 0 5px 20px rgba(0, 242, 255, 0.1) !important;">
+    <div class="border-bottom border-secondary bg-black bg-opacity-90 py-3 mb-5 shadow-lg app-topbar" style="position: relative; z-index: 10; box-shadow: 0 5px 20px rgba(0, 242, 255, 0.1) !important;">
         <div class="container">
             <div class="row align-items-center">
                 
-                <div class="col-md-4 d-flex align-items-center justify-content-start">
-                    <img src="{{ url_for('static', filename='images/logo_unpam.png') }}" 
-                         alt="Logo UNPAM" 
-                         style="height: 55px; width: auto; object-fit: contain; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));" 
-                         class="me-3">
-                    
-                    <div style="height: 40px; width: 1px; background: #333; margin-right: 15px;"></div>
-
-                    <img src="{{ url_for('static', filename='images/logo_bmkg.png') }}" 
-     alt="Logo BMKG" 
-     class="logo-stroke" 
-     style="height: 55px; width: auto; object-fit: contain;">
+                <div class="col-md-4 d-flex align-items-center justify-content-start flex-wrap gap-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="{{ url_for('static', filename='images/logo_unpam.png') }}" 
+                             alt="Logo UNPAM" 
+                             class="logo-header"
+                             style="height: 55px; width: auto; object-fit: contain;">
+                        <div class="topbar-divider" style="height: 45px; width: 1px; background: rgba(255,255,255,0.4);"></div>
+                        <img src="{{ url_for('static', filename='images/logo_bmkg.png') }}" 
+                             alt="Logo BMKG"
+                             class="logo-header logo-stroke"
+                             style="height: 55px; width: auto; object-fit: contain;">
+                    </div>
                 </div>
 
                 <div class="col-md-4 text-center mt-3 mt-md-0">
-                    <h2 class="m-0 text-white brand-font fw-bold" style="letter-spacing: 2px; text-shadow: 0 0 15px var(--neon-cyan);">
-                        NEURAL SKY 
-                        <span class="text-cyan fs-5" style="font-family: 'Rajdhani', sans-serif;">// BMKG AI</span>
-                    </h2>
-                    
-                    <div class="tech-font d-block mt-2" style="color: #cccccc; font-size: 0.85rem; line-height: 1.4;">
-                        <span class="text-white fw-bold">Yudha Rangga WP</span> | NIM: 241012000151<br>
-                        Prodi Magister Teknik Informatika - Universitas Pamulang
+                    <h2 class="m-0 text-white brand-font fw-bold" style="letter-spacing: 2px; text-shadow: 0 0 15px var(--neon-cyan); font-size: clamp(2.1rem, 3vw, 3rem); line-height: 1.1;">NEURAL SKY</h2>
+                    <div class="d-flex justify-content-center align-items-center gap-3 mt-2 flex-wrap">
+                        <span class="badge bg-cyan text-dark px-3 py-2" style="font-size:0.85rem; letter-spacing:1px;">BMKG AI</span>
+                        <small class="tech-font text-dim" style="font-size:0.95rem;">Operational Hybrid Ensemble Cloud Classification</small>
+                    </div>
+                    <div class="tech-font d-block mt-2" style="font-size: 0.85rem; line-height: 1.4; color: rgba(255,255,255,0.82);">
+                        <span class="fw-bold">Yudha Rangga WP</span> | NIM: 241012000151<br>
+                        Magister Teknik Informatika - Universitas Pamulang
                     </div>
                 </div>
 
-                <div class="col-md-4 d-flex justify-content-end align-items-center d-none d-md-flex">
-                    <div class="text-end">
-                        <div class="tech-font text-dim" style="font-size: 0.7rem;">SYSTEM STATUS</div>
-                        <span class="status-indicator" style="font-size: 0.8rem; padding: 5px 15px;">ONLINE</span>
+                <div class="col-md-4 d-flex flex-column justify-content-between align-items-end mt-3 mt-md-0">
+                    <div class="d-flex flex-column align-items-end gap-2">
+                        <div class="text-end">
+                            <div class="tech-font text-dim" style="font-size: 0.7rem;">{{ texts.get('system_status', 'SYSTEM STATUS') }}</div>
+                            <span class="status-indicator" style="font-size: 0.8rem; padding: 5px 15px;">{{ texts.get('system_online', 'ONLINE') }}</span>
+                        </div>
+                        <button id="themeToggle" class="btn btn-outline-light btn-sm theme-toggle">{{ texts.get('light_mode', 'Light Mode') }}</button>
                     </div>
+                    <div class="d-flex align-items-center gap-2 mt-2">
+                        <a href="{{ url_for('set_lang') }}?lang=en" title="English">
+                            <img src="{{ url_for('static', filename='images/flag_en.svg') }}" alt="EN" style="width:34px; border-radius:4px; border:2px solid {% if lang=='en' %}#00d1ff{% else %}transparent{% endif %};">
+                        </a>
+                        <a href="{{ url_for('set_lang') }}?lang=id" title="Bahasa Indonesia">
+                            <img src="{{ url_for('static', filename='images/flag_id.svg') }}" alt="ID" style="width:34px; border-radius:4px; border:2px solid {% if lang=='id' %}#00d1ff{% else %}transparent{% endif %};">
+                        </a>
+                    </div>
+                    {% if user %}
+                    <div class="topbar-user-box mt-3 text-end d-none d-lg-block">
+                            <div class="tech-font text-dim" style="font-size:0.72rem;">{{ texts.get('signed_in_as', 'Signed in as') }}</div>
+                        <div class="text-white fw-bold mt-1">{{ user | upper }} <span class="badge bg-cyan text-dark">{{ role | upper }}</span></div>
+                        <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm mt-3">{{ texts.get('logout', 'Logout') }}</a>
+                    </div>
+                    {% endif %}
                 </div>
 
             </div>
@@ -64,33 +82,33 @@
         <ul class="nav nav-pills mb-5 justify-content-center nav-fill" id="pills-tab" role="tablist">
             <li class="nav-item">
                 <button class="nav-link active py-3" data-bs-toggle="pill" data-bs-target="#pills-scan" onclick="startTypewriter('scan')">
-                    <i class="fas fa-satellite-dish me-2"></i>TARGET SCAN
+                    <i class="fas fa-satellite-dish me-2"></i>{{ texts.get('target_scan', 'TARGET SCAN') }}
                 </button>
             </li>
             <li class="nav-item">
                 <button class="nav-link py-3 position-relative" data-bs-toggle="pill" data-bs-target="#pills-xray" onclick="startTypewriter('xray')">
-                    <i class="fas fa-eye me-2"></i>NEURAL VISION
+                    <i class="fas fa-eye me-2"></i>{{ texts.get('neural_vision', 'NEURAL VISION') }}
                     {% if heatmap_data %}<span class="position-absolute top-0 start-100 translate-middle p-1 bg-cyan border border-light rounded-circle" style="box-shadow: 0 0 10px var(--neon-cyan);"></span>{% endif %}
                 </button>
             </li>
             <li class="nav-item">
                 <button class="nav-link py-3" data-bs-toggle="pill" data-bs-target="#pills-evidence" onclick="startTypewriter('evidence')">
-                    <i class="fas fa-search-location me-2"></i>FORENSIC
+                    <i class="fas fa-search-location me-2"></i>{{ texts.get('forensic', 'FORENSIC') }}
                 </button>
             </li>
             <li class="nav-item">
                 <button class="nav-link py-3" data-bs-toggle="pill" data-bs-target="#pills-simulation" onclick="startTypewriter('simulation')">
-                    <i class="fas fa-clock me-2"></i>SIMULATION
+                    <i class="fas fa-clock me-2"></i>{{ texts.get('simulation_label', 'SIMULATION') }}
                 </button>
             </li>
             <li class="nav-item">
                 <button class="nav-link py-3" data-bs-toggle="pill" data-bs-target="#pills-bmkg" onclick="loadBMKGData()">
-                    <i class="fas fa-globe me-2"></i>BMKG DATA
+                    <i class="fas fa-globe me-2"></i>{{ texts.get('bmkg_data', 'BMKG DATA') }}
                 </button>
             </li>
             <li class="nav-item">
                 <button class="nav-link py-3" data-bs-toggle="pill" data-bs-target="#pills-data" onclick="startTypewriter('data')">
-                    <i class="fas fa-chart-bar me-2"></i>LAB METRICS
+                    <i class="fas fa-chart-bar me-2"></i>{{ texts.get('lab_metrics', 'LAB METRICS') }}
                 </button>
             </li>
         </ul>
@@ -104,7 +122,7 @@
             <div class="tab-pane fade" id="pills-bmkg">
                 <div id="bmkg-content" class="text-center py-5">
                     <div class="spinner-border text-cyan" role="status"></div>
-                    <p class="tech-font text-dim mt-3 blink-text">INITIALIZING SATELLITE UPLINK...</p>
+                    <p class="tech-font text-dim mt-3 blink-text">{{ texts.get('initializing_satellite_uplink', 'INITIALIZING SATELLITE UPLINK...') }}</p>
                 </div>
             </div>
 
@@ -114,8 +132,9 @@
 
     <footer>
         <div class="container">
-            &copy; 2025 - UNIVERSITAS PAMULANG<br>
-            Developed by Yudha Rangga WP - Magister Teknik Informatika
+            &copy; 2026 - UNIVERSITAS PAMULANG<br>
+            Developed by Yudha Rangga WP - Magister Teknik Informatika<br>
+            <small style="color: rgba(255,255,255,0.7);">Disclaimer: Sistem ini masih prototipe dan dibangun untuk keperluan demo serta penelitian.</small>
         </div>
     </footer>
 
@@ -163,7 +182,11 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+    <script>
+        // Inject translated texts for frontend scripts
+        window.NS_TEXTS = {{ texts | tojson | safe }};
+        window.NS_LANG = "{{ lang }}";
+    </script>
     {% include 'components/scripts.html' %}
 
     <script>
@@ -177,8 +200,8 @@
             document.getElementById('pills-bmkg').innerHTML = `
                 <div class="hud-panel p-5 text-center" style="min-height: 400px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
                     <div class="spinner-border text-cyan" style="width: 3rem; height: 3rem;" role="status"></div>
-                    <h4 class="brand-font text-white mt-4">ESTABLISHING SATELLITE UPLINK...</h4>
-                    <p class="tech-font text-dim blink-text">Connecting to API.BMKG.GO.ID</p>
+                    <h4 class="brand-font text-white mt-4">{{ texts.get('establishing_satellite_uplink', 'ESTABLISHING SATELLITE UPLINK...') }}</h4>
+                    <p class="tech-font text-dim blink-text">{{ texts.get('live_connection', 'Connecting to API.BMKG.GO.ID') }}</p>
                 </div>
             `;
             
@@ -218,7 +241,7 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Gagal memuat data lokasi baru. Pastikan internet stabil.');
+                    alert(window.NS_TEXTS && window.NS_TEXTS.failed_load_location ? window.NS_TEXTS.failed_load_location : 'Failed to load new location. Please check your internet connection.');
                 });
         }
     </script>
@@ -246,17 +269,17 @@
 
         if (mode === 'indo') {
             newUrl = "https://inderaja.bmkg.go.id/IMAGE/HIMA/H08_EH_Indonesia.png";
-            description = "Infrared Enhanced (Indonesia). Menampilkan suhu puncak awan. Area merah menunjukkan awan tebal/badai.";
+            description = window.NS_TEXTS && window.NS_TEXTS.satellite_indo_desc ? window.NS_TEXTS.satellite_indo_desc : "Infrared Enhanced (Indonesia). Menampilkan suhu puncak awan. Area merah menunjukkan awan tebal/badai.";
         } 
         else if (mode === 'jabo') {
             // URL KHUSUS JABODETABEK
             newUrl = "https://inderaja.bmkg.go.id/IMAGE/HIMA/H08_EH_Jakarta.png";
-            description = "<b>Himawari-9 Enhanced Jabodetabek.</b> Citra satelit inframerah 10.4µm Enhanced khusus untuk wilayah Jabodetabek. Lebih detail untuk validasi lokal.";
+            description = window.NS_TEXTS && window.NS_TEXTS.satellite_jabodetabek_desc ? window.NS_TEXTS.satellite_jabodetabek_desc : "<b>Himawari-9 Enhanced Jabodetabek.</b> Citra satelit inframerah 10.4µm Enhanced khusus untuk wilayah Jabodetabek. Lebih detail untuk validasi lokal.";
         } 
         else if (mode === 'rain') {
             // URL KHUSUS POTENSI HUJAN
             newUrl = "https://inderaja.bmkg.go.id/IMAGE/HIMA/H08_RP_Indonesia.png";
-            description = "<b>Himawari-9 Rainfall Potential.</b> Estimasi potensi curah hujan berdasarkan suhu puncak awan. Hijau: Ringan, Kuning: Sedang, Merah: Lebat.";
+            description = window.NS_TEXTS && window.NS_TEXTS.satellite_rain_desc ? window.NS_TEXTS.satellite_rain_desc : "<b>Himawari-9 Rainfall Potential.</b> Estimasi potensi curah hujan berdasarkan suhu puncak awan. Hijau: Ringan, Kuning: Sedang, Merah: Lebat.";
         }
         else if (mode === 'cloudtype') {
             // Himawari Cloud Type (CLC) dari BMKG (HCAI_CLC)

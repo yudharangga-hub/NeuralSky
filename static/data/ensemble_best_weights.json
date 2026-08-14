@@ -1,0 +1,10 @@
+{
+  "w_cnn": 0.0,
+  "w_mobilenet": 0.05,
+  "w_eff": 0.95,
+  "accuracy": 1.0,
+  "precision_macro": 1.0,
+  "recall_macro": 1.0,
+  "f1_macro": 1.0,
+  "macro_f1": 1.0
+}

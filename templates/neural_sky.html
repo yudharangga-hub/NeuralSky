@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ texts.get('title', 'Neural Sky') }}</title>
+  <link rel="stylesheet" href="/static/css/hud_style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>{{ texts.get('title') }}</h1>
+
+    <style>
+      .flag { width:32px; cursor:pointer; margin-right:8px; border:2px solid transparent; border-radius:4px; }
+      .flag.selected { border-color:#007bff; }
+      .flag-wrap { display:flex; align-items:center; gap:10px; }
+    </style>
+    <div class="flag-wrap" aria-label="{{ texts.get('select_language') }}">
+      <a href="?lang=en" title="English">
+        <img src="{{ url_for('static', filename='images/flag_en.svg') }}" class="flag {% if lang=='en' %}selected{% endif %}" alt="English">
+      </a>
+      <a href="?lang=id" title="Bahasa Indonesia">
+        <img src="{{ url_for('static', filename='images/flag_id.svg') }}" class="flag {% if lang=='id' %}selected{% endif %}" alt="Bahasa Indonesia">
+      </a>
+    </div>
+
+    <hr />
+
+    <form method="post" enctype="multipart/form-data">
+      <input type="file" name="file" accept="image/*" />
+      <button type="submit">{{ texts.get('upload_button') }}</button>
+    </form>
+
+    {% if analysis %}
+      <h2>{{ texts.get('analysis_results') }}</h2>
+      <p>{{ texts.get('cloud_coverage') }}: {{ analysis.cloud_coverage }}%</p>
+      <p>{{ texts.get('oktas') }}: {{ analysis.oktas_val }}</p>
+
+      {% if analysis.final_decision %}
+        <h3>{{ texts.get('predicted_class') }}: {{ analysis.final_decision.class }}</h3>
+        <p>{{ texts.get('confidence') }}: {{ analysis.final_decision.confidence }}%</p>
+      {% endif %}
+
+      <h4>{{ texts.get('models') }}</h4>
+      <ul>
+      {% for r in analysis.results %}
+        <li>{{ r.model }} — {{ r.prediction }} ({{ r.confidence }}%)</li>
+      {% endfor %}
+      </ul>
+
+      <h4>{{ texts.get('heatmaps') }}</h4>
+      <div>
+      {% for name, data in analysis.heatmap_data.items() %}
+        <div style="display:inline-block;margin:8px;text-align:center">
+          <img src="{{ data.img }}" alt="cam" width="160"><br>
+          <small>{{ name }} — {{ data.conf }}%</small>
+        </div>
+      {% endfor %}
+      </div>
+
+      <h4>{{ texts.get('evidence') }}</h4>
+      <ul>
+      {% for ev in analysis.evidence_files %}
+        <li>{{ ev }}</li>
+      {% endfor %}
+      </ul>
+
+      <form id="reportForm" method="post" action="{{ url_for('neural_sky_report') }}">
+        <input type="hidden" name="lang" value="{{ lang }}">
+        <input type="hidden" name="filename" value="{{ analysis.get('results')[0].get('model') if analysis.get('results') else '' }}">
+        <input type="hidden" name="class" value="{{ analysis.final_decision.class if analysis.final_decision else '' }}">
+        <input type="hidden" name="confidence" value="{{ analysis.final_decision.confidence if analysis.final_decision else '' }}">
+        <input type="hidden" name="coverage" value="{{ analysis.cloud_coverage }}">
+        <input type="hidden" name="oktas" value="{{ analysis.oktas_val }}">
+        <button type="submit">{{ texts.get('download_report') }}</button>
+      </form>
+    {% endif %}
+
+  </div>
+  <script src="/static/js/neural_sky.js"></script>
+</body>
+</html>

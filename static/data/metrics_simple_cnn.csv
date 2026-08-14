@@ -1,0 +1,9 @@
+class,precision,recall,f1,support
+cirriform clouds,0.8438,0.9310,0.8852,29
+clear sky,1.0000,1.0000,1.0000,25
+cumulonimbus clouds,1.0000,0.6667,0.8000,21
+cumulus clouds,0.8837,0.9048,0.8941,42
+high cumuliform clouds,0.9302,0.8511,0.8889,47
+stratiform clouds,0.9000,1.0000,0.9474,18
+stratocumulus clouds,0.7742,0.9231,0.8421,26
+MACRO_AVG,0.9046,0.8967,0.8940,208

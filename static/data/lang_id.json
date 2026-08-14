@@ -1,0 +1,75 @@
+{
+  "title": "Neural Sky",
+  "upload_button": "Unggah Gambar",
+  "select_language": "Pilih bahasa",
+  "no_file": "Tidak ada file",
+  "no_image": "Tidak ditemukan gambar",
+  "report_title": "Laporan Neural Sky",
+  "file": "Berkas",
+  "predicted_class": "Kelas prediksi",
+  "confidence": "Kepercayaan",
+  "cloud_coverage": "Cakupan awan (%)",
+  "oktas": "Oktas",
+  "download_report": "Unduh Laporan",
+  "analysis_results": "Hasil Analisis",
+  "models": "Model",
+  "heatmaps": "Heatmap",
+  "evidence": "Contoh Bukti",
+  "scan": ">> MODUL INFERENSI: Memproses citra input melalui 3 arsitektur paralel. Keputusan final diambil menggunakan Weighted Ensemble Voting untuk meminimalisir bias.",
+  "xray": ">> EXPLAINABLE AI: Visualisasi Gradient-weighted Class Activation Mapping (Grad-CAM). Warna merah menunjukkan area fokus utama yang digunakan model.",
+  "simulation": ">> SIMULASI PREDIKTIF: Menggunakan Expert System Rule-Based berbasis morfologi awan untuk memproyeksikan potensi cuaca dalam 60 menit ke depan.",
+  "data": ">> METRIK EVALUASI: Analisis Confusion Matrix dan Learning Curve pada data uji. Klik grafik untuk memperbesar.",
+  "light_mode": "Light Mode",
+  "dark_mode": "Dark Mode",
+  "system_status": "STATUS SISTEM",
+  "signed_in_as": "Signed in as",
+  "logout": "Logout",
+  "target_scan": "TARGET SCAN",
+  "neural_vision": "NEURAL VISION",
+  "forensic": "FORENSIK",
+  "simulation_label": "SIMULASI",
+  "bmkg_data": "BMKG DATA",
+  "lab_metrics": "LAB METRICS",
+  "input_stream": "INPUT STREAM",
+  "click_to_upload": "CLICK TO UPLOAD",
+  "system_standby": "SYSTEM STANDBY"
+  ,"initiate_analysis":"INITIATE ANALYSIS",
+  "system_online_tracking":"SYSTEM: ONLINE | TRACKING: ACTIVE",
+  "final_decision":"FINAL DECISION:",
+  "print_report":"CETAK LAPORAN",
+  "awaiting_input":"Awaiting visual input...",
+  "probability":"PROBABILITAS"
+  ,"tactical_analysis":"ANALISIS TAKTIS"
+  ,"flight_risk":"RISIKO PENERBANGAN"
+  ,"rain_potential":"POTENSI HUJAN"
+  ,"visibility":"VISIBILITAS"
+  ,"operational_recommendation":"REKOMENDASI OPERASIONAL"
+  ,"manual_verification":"VERIFIKASI MANUAL SEBELUM EKSPOR:",
+  "final_decision":"FINAL DECISION:",
+  "print_report":"CETAK LAPORAN",
+  "override_note":"Jika tidak dilakukan override manual, laporan PDF akan mengikuti rekomendasi AI secara otomatis."
+  ,"official_bmkg_feed":"OFFICIAL BMKG DATA FEED"
+  ,"live_connection":"LIVE CONNECTION"
+  ,"data_source":"Sumber data: BMKG"
+  ,"satellite":"SATELLITE"
+  ,"live_feed":"LIVE FEED"
+  ,"image_analysis":"ANALISIS CITRA"
+  ,"flight_safety_analysis":"FLIGHT SAFETY ANALYSIS:"
+  ,"status_now":"STATUS SAAT INI:"
+  ,"waiting_server":"Menunggu data dari server..."
+  ,"loading_analysis":"Memuat data analisis..."
+  ,"caution_ifr":"CAUTION (IFR)"
+  ,"safe_vfr":"SAFE (VFR)"
+  ,"t1_projection":"T+1 HOUR PROJECTION"
+  ,"now":"SEKARANG"
+  ,"t1_estimate":"ESTIMASI T+1 JAM"
+  ,"expert_system_label":"EXPERT SYSTEM / RULE-BASED MODEL:"
+  ,"awaiting_input_data":"AWAITING INPUT DATA"
+  ,"run_scan_to_simulate":"Lakukan scanning untuk menjalankan simulasi."
+  ,"initializing_satellite_uplink":"INITIALIZING SATELLITE UPLINK..."
+  ,"establishing_satellite_uplink":"ESTABLISHING SATELLITE UPLINK..."
+  ,"failed_load_location":"Gagal memuat data lokasi baru. Pastikan internet stabil."
+  ,"satellite_jabodetabek_desc":"Himawari-9 Enhanced Jabodetabek. Citra inframerah 10.4µm (enhanced) untuk wilayah Jabodetabek.",
+  "satellite_indo_desc":"Infrared Enhanced (Indonesia). Menampilkan suhu puncak awan; warna merah menandakan awan tebal/badai.",
+  "satellite_rain_desc":"Estimasi Potensi Hujan Himawari-9. Hijau: Ringan, Kuning: Sedang, Merah: Lebat."
+}

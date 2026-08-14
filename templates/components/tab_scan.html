@@ -4,14 +4,14 @@
     <div class="row g-5">
         <div class="col-lg-5">
             <div class="hud-panel p-4 h-100">
-                <h4 class="brand-font text-cyan mb-4">INPUT STREAM</h4>
+                <h4 class="brand-font text-cyan mb-4">{{ texts.get('input_stream', 'INPUT STREAM') }}</h4>
                 <form action="/" method="post" enctype="multipart/form-data" id="scanForm">
                     <div class="scan-container mb-4" onclick="document.getElementById('fileInput').click();">
                         <div class="neural-grid"></div>
                         
                         <div id="placeholder" class="text-center" style="display: {{ 'none' if image_file else 'block' }}; z-index: 2;">
                             <i class="fas fa-cloud-upload-alt fa-5x text-cyan mb-4"></i>
-                            <h5 class="brand-font text-white">CLICK TO UPLOAD</h5>
+                            <h5 class="brand-font text-white">{{ texts.get('click_to_upload', 'CLICK TO UPLOAD') }}</h5>
                             <p class="tech-font text-dim small">JPG/PNG (AUTO-RESIZE)</p>
                         </div>
                         
@@ -31,7 +31,7 @@
                         <input type="file" name="file" id="fileInput" hidden onchange="previewImage(this)">
                     </div>
 
-                    <button type="button" onclick="initiateScan()" class="btn-cyber">INITIATE ANALYSIS</button>
+                    <button type="button" onclick="initiateScan()" class="btn-cyber">{{ texts.get('initiate_analysis', 'INITIATE ANALYSIS') }}</button>
 
                         <!-- Bagian dropdown dan info stasiun BMKG dihapus sesuai permintaan -->
                 </form>
@@ -49,7 +49,7 @@
                             <small class="text-dim tech-font">Weighted Ensemble Voting:</small>
                             <h1 class="brand-font text-white mb-0 text-cyan text-uppercase" 
                                 style="text-shadow: 0 0 20px var(--neon-cyan); font-size: 3rem; line-height: 1.1; word-wrap: break-word;">
-                                {% if impact_info %}{{ impact_info.nama_indo }}{% else %}{{ final_decision.class }}{% endif %}
+                                {{ final_decision.class }}
                             </h1>
                         </div>
                         <div class="text-end mb-2">
@@ -57,7 +57,7 @@
                                  style="text-shadow: 0 0 20px var(--neon-purple); font-size: 4rem;">
                                 {{ final_decision.confidence }}<span style="font-size: 2rem;">%</span>
                             </div>
-                            <small class="text-dim tech-font">PROBABILITY</small>
+                            <small class="text-dim tech-font">{{ texts.get('probability', 'PROBABILITY') }}</small>
                         </div>
                     </div>
 
@@ -92,11 +92,11 @@
                         </div>
                     </div>
 
-                    <div class="p-4" style="background: rgba(0, 20, 40, 0.6); border-left: 3px solid var(--neon-cyan); border-radius: 0 10px 10px 0;">
-                        <h5 class="brand-font text-cyan mb-3"><i class="fas fa-info-circle me-2"></i>TACTICAL ANALYSIS</h5>
+                        <div class="p-4" style="background: rgba(0, 20, 40, 0.6); border-left: 3px solid var(--neon-cyan); border-radius: 0 10px 10px 0;">
+                        <h5 class="brand-font text-cyan mb-3"><i class="fas fa-info-circle me-2"></i>{{ texts.get('tactical_analysis', 'TACTICAL ANALYSIS') }}</h5>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <small class="tech-font text-dim">RISIKO PENERBANGAN</small>
+                                <small class="tech-font text-dim">{{ texts.get('flight_risk', 'FLIGHT RISK') }}</small>
                                 <div class="fw-bold text-white mt-1" style="font-family: 'Orbitron'; letter-spacing: 1px;">
                                     {% if 'BAHAYA' in impact_info.risiko_penerbangan %}
                                         <span style="color: #ff3333; text-shadow: 0 0 10px red;"><i class="fas fa-exclamation-triangle me-2"></i>{{ impact_info.risiko_penerbangan }}</span>
@@ -108,16 +108,16 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <small class="tech-font text-dim">POTENSI HUJAN</small>
+                                <small class="tech-font text-dim">{{ texts.get('rain_potential', 'RAIN POTENTIAL') }}</small>
                                 <div class="tech-font text-white mt-1">{{ impact_info.potensi_hujan }}</div>
                             </div>
                             <div class="col-md-12">
-                                <small class="tech-font text-dim">VISIBILITAS</small>
+                                <small class="tech-font text-dim">{{ texts.get('visibility', 'VISIBILITY') }}</small>
                                 <div class="tech-font text-white mt-1">{{ impact_info.visibilitas }}</div>
                             </div>
                             <div class="col-12 mt-3">
                                 <div class="p-3" style="border: 1px dashed rgba(255,255,255,0.2); background: rgba(255,255,255,0.05);">
-                                    <small class="tech-font text-cyan">REKOMENDASI OPERASIONAL:</small>
+                                    <small class="tech-font text-cyan">{{ texts.get('operational_recommendation', 'OPERATIONAL RECOMMENDATION') }}</small>
                                     <p class="mb-0 mt-2 text-white" style="font-family: 'Share Tech Mono'; line-height: 1.4;">"{{ impact_info.rekomendasi }}"</p>
                                 </div>
                             </div>
@@ -129,16 +129,17 @@
                     <div class="mt-4 pt-4 border-top border-secondary">
                         <div class="d-flex align-items-center mb-2">
                             <i class="fas fa-user-check text-cyan me-2"></i>
-                            <span class="tech-font text-white fw-bold">VERIFIKASI MANUAL SEBELUM EKSPOR:</span>
+                            <span class="tech-font text-white fw-bold">{{ texts.get('manual_verification') }}</span>
                         </div>
                         
                         <form action="/generate_report" method="POST" target="_blank">
                             <input type="hidden" name="filename" value="{{ image_file.split('/')[-1] }}">
+                            <input type="hidden" name="ai_recommendation" value="{{ final_decision.class }}">
                             
                             <div class="input-group">
                                 <span class="input-group-text tech-font" 
                                       style="background-color: #000; color: var(--neon-cyan); border: 1px solid var(--neon-cyan); font-weight: bold; text-shadow: 0 0 5px rgba(0, 242, 255, 0.3);">
-                                    FINAL DECISION:
+                                    {{ texts.get('final_decision') }}
                                 </span>
                                 
                                 <select name="corrected_class" class="form-select brand-font" 
@@ -151,13 +152,13 @@
                                 </select>
                                 
                                 <button type="submit" class="btn btn-print-fixed px-4 brand-font" style="border-radius: 0 5px 5px 0;">
-                                <i class="fas fa-file-pdf me-2"></i>CETAK LAPORAN
+                                <i class="fas fa-file-pdf me-2"></i>{{ texts.get('print_report') }}
                             </button>
                             </div>
                             
                             <small class="tech-font d-block mt-2" style="color: #e0e0e0; font-size: 0.85rem;">
                                 <i class="fas fa-info-circle me-1 text-cyan"></i>
-                                *Jika prediksi AI kurang tepat, silakan ubah jenis awan pada menu di atas sebelum mencetak.
+                                {{ texts.get('override_note') }}
                             </small>
                         </form>
                     </div>
@@ -166,8 +167,8 @@
             {% else %}
                 <div class="hud-panel p-5 text-center h-100 d-flex flex-column justify-content-center opacity-75">
                     <i class="fas fa-microchip fa-6x mb-4 text-cyan fa-spin" style="animation-duration: 5s;"></i>
-                    <h2 class="brand-font text-white">SYSTEM STANDBY</h2>
-                    <p class="tech-font text-dim fs-5">Awaiting visual input...</p>
+                    <h2 class="brand-font text-white">{{ texts.get('system_standby', 'SYSTEM STANDBY') }}</h2>
+                        <p class="tech-font text-dim fs-5">{{ texts.get('awaiting_input', 'Awaiting visual input...') }}</p>
                 </div>
             {% endif %}
         </div>

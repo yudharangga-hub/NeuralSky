@@ -1,17 +1,15 @@
 <script>
     // --- 1. TYPEWRITER EFFECT CONFIGURATION ---
+    // Use server-provided translations if available, otherwise fallback to hardcoded English/ID strings.
+    const _T = window.NS_TEXTS || {};
     const texts = {
-        'scan': ">> MODUL INFERENSI: Memproses citra input melalui 3 arsitektur paralel. Keputusan final diambil menggunakan Weighted Ensemble Voting untuk meminimalisir bias.",
-        
-        'xray': ">> EXPLAINABLE AI: Visualisasi Gradient-weighted Class Activation Mapping (Grad-CAM). Warna merah menunjukkan area fokus utama yang digunakan model.",
-        
-        // Teks Revisi (Tanpa BMKG)
-        'evidence': ">> FORENSIK DIGITAL: Mencocokkan pola visual input dengan 1.200+ sampel dataset pelatihan tervalidasi. Menampilkan sampel referensi dengan tingkat kemiripan morfologi tertinggi.",
-        
-        // Teks Baru untuk Simulation
-        'simulation': ">> SIMULASI PREDIKTIF: Menggunakan model deret waktu meteorologi untuk memproyeksikan evolusi awan dan potensi cuaca dalam 60 menit kedepan.",
-        
-        'data': ">> METRIK EVALUASI: Analisis Confusion Matrix dan Learning Curve pada data uji. Klik grafik untuk memperbesar."
+        'scan': _T.scan || ">> MODUL INFERENSI: Memproses citra input melalui 3 arsitektur paralel. Keputusan final diambil menggunakan Weighted Ensemble Voting untuk meminimalisir bias.",
+        'xray': _T.xray || ">> EXPLAINABLE AI: Visualisasi Gradient-weighted Class Activation Mapping (Grad-CAM). Warna merah menunjukkan area fokus utama yang digunakan model.",
+        'evidence': _T.evidence || ">> FORENSIK DIGITAL: Mencocokkan pola visual input terhadap dataset referensi. Menampilkan referensi morfologi dengan tingkat kemiripan tertinggi.",
+        'simulation': _T.simulation || ">> SIMULASI PREDIKTIF: Menggunakan Expert System Rule-Based berbasis morfologi awan untuk memproyeksikan potensi cuaca dalam 60 menit ke depan.",
+        'data': _T.data || ">> METRIK EVALUASI: Analisis Confusion Matrix dan Learning Curve pada data uji. Klik grafik untuk memperbesar.",
+        'light_mode': _T.light_mode || 'Light Mode',
+        'dark_mode': _T.dark_mode || 'Dark Mode'
     };
 
     let typeInterval;
@@ -35,20 +33,48 @@
         }, 20); // Kecepatan ketik 20ms
     }
     
+    function initTheme() {
+        const savedTheme = localStorage.getItem('dashboardTheme') || 'dark';
+        setTheme(savedTheme);
+        updateThemeImages(savedTheme);
+    }
+
+    function updateThemeImages(theme) {
+        const images = document.querySelectorAll('img[data-light-src][data-dark-src]');
+        images.forEach(img => {
+            const src = theme === 'light' ? img.dataset.lightSrc : img.dataset.darkSrc;
+            if (src) {
+                img.src = `${src}?t=${Math.floor(Math.random() * 1000)}`;
+            }
+        });
+    }
+
+    function setTheme(theme) {
+        document.body.classList.toggle('theme-light', theme === 'light');
+        const btn = document.getElementById('themeToggle');
+        if (btn) {
+            btn.innerText = theme === 'light' ? texts.dark_mode : texts.light_mode;
+        }
+        localStorage.setItem('dashboardTheme', theme);
+        updateThemeImages(theme);
+    }
+
     // --- 2. PREVIEW IMAGE & SCAN LOGIC ---
     function previewImage(input) {
         if(input.files && input.files[0]){
             var reader = new FileReader();
             reader.onload = function(e){
-                // Tampilkan container HUD & Gambar
                 const previewImg = document.getElementById('preview');
                 previewImg.src = e.target.result;
+                previewImg.style.display = 'block';
+                previewImg.style.objectFit = 'contain';
+                previewImg.style.width = '100%';
+                previewImg.style.height = '100%';
+                previewImg.style.zIndex = '2';
                 
-                // Aktifkan tampilan HUD jika ada (untuk Ide 1)
                 const hudContainer = document.querySelector('.hud-container');
                 if(hudContainer) hudContainer.style.display = 'block';
                 
-                // Sembunyikan placeholder
                 document.getElementById('placeholder').style.display='none';
             }
             reader.readAsDataURL(input.files[0]);
@@ -57,7 +83,7 @@
 
     function initiateScan() {
         if(document.getElementById('fileInput').files.length === 0){
-            alert("NO IMAGE DETECTED");
+                alert(_T.no_image || "NO IMAGE DETECTED");
             return;
         }
         // Efek UI saat scanning
@@ -72,9 +98,19 @@
         }, 1500);
     }
 
+    function getCurrentTheme() {
+        return document.body.classList.contains('theme-light') ? 'light' : 'dark';
+    }
+
+    function toLightVariant(src) {
+        if (!src || getCurrentTheme() !== 'light') return src;
+        return src.replace(/(confusion_[^?]*?)\.png(\?.*)?$/, '$1_light.png$2');
+    }
+
     // --- 3. MODAL ZOOM FUNCTION ---
     function openModal(src, title) {
-        document.getElementById('modalImage').src = src;
+        const actualSrc = toLightVariant(src);
+        document.getElementById('modalImage').src = actualSrc;
         document.getElementById('modalLabel').innerText = title;
         new bootstrap.Modal(document.getElementById('imageModal')).show();
     }
@@ -101,14 +137,23 @@
 
     // --- 5. ON LOAD EVENTS ---
     document.addEventListener("DOMContentLoaded", () => {
+        initTheme();
+        const themeBtn = document.getElementById('themeToggle');
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                const newTheme = document.body.classList.contains('theme-light') ? 'dark' : 'light';
+                setTheme(newTheme);
+            });
+        }
+
         // Mulai ketik text tab pertama
         startTypewriter('scan');
         
         // Cek apakah ada hasil analisis di layar untuk memicu suara
         const resultBox = document.querySelector('.brand-font.text-white.mb-0.text-cyan');
         if(resultBox) {
-            // Ambil nama awan (yang sudah diterjemahkan ke Indo oleh Jinja2)
-            const cloudName = resultBox.innerText;
+            // Ambil nama awan sesuai kelas dataset asli
+            const cloudName = resultBox.innerText.trim();
             
             // Ambil teks rekomendasi (bersihkan tanda kutip)
             const recTextElement = document.querySelector('p[style*="Share Tech Mono"]');

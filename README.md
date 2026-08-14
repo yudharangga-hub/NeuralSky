@@ -1,194 +1,174 @@
-# ☁️ NEURAL SKY: Cloud Classification & Weather Analysis System
+# Neural Sky
 
-> **Sistem Klasifikasi Awan Berbasis Hybrid Ensemble Deep Learning dengan Integrasi Explainable AI (XAI) dan Sistem Pakar Meteorologi.**
+Sistem Klasifikasi Awan Hybrid Ensemble dengan Integrasi Explainable AI (XAI) dan Sistem Pakar Meteorologi.
 
-![Main Dashboard](screenshots/dashboard_main.jpg)
+[![GitHub release](https://img.shields.io/badge/release-v1.0--thesis-blue)](https://github.com/yudharangga-hub/NeuralSky/releases)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.x-EE4C2C)](https://pytorch.org/)
+[![License](https://img.shields.io/badge/license-Academic-lightgrey)]()
 
-## 📖 Tentang Proyek
+Neural Sky adalah sistem klasifikasi awan berbasis deep learning yang menggabungkan pendekatan hybrid ensemble, interpretabilitas model, estimasi tutupan awan (Oktas), dan simulasi dampak cuaca berbasis aturan meteorologi. Sistem ini dikembangkan untuk mendukung analisis awan secara lebih objektif dan terukur dalam konteks penelitian serta aplikasi meteorologi operasional.
 
-**Neural Sky** adalah purwarupa sistem cerdas (*Intelligent Decision Support System*) yang dirancang untuk membantu pengamatan meteorologi dan keselamatan penerbangan. Sistem ini tidak hanya mengklasifikasikan jenis awan, tetapi juga memberikan estimasi kuantitatif (Oktas), transparansi visual (XAI), dan simulasi dampak cuaca.
+## Overview
 
-Proyek ini dikembangkan sebagai bagian dari **Tesis Magister Teknik Informatika (Universitas Pamulang)** untuk menjawab tantangan subjektivitas dalam pengamatan awan manual.
+Proyek ini mengintegrasikan beberapa komponen utama:
 
-### 🌟 Fitur Unggulan
+- Hybrid ensemble CNN menggunakan Simple CNN, MobileNetV2, dan EfficientNet-B0
+- Weighted Soft Voting untuk kombinasi prediksi model
+- Grad-CAM untuk visualisasi area fokus model pada citra awan
+- Estimasi Oktas berdasarkan segmentasi citra
+- Sistem pakar meteorologi untuk analisis dampak cuaca T+1
+- Dashboard web berbasis Flask untuk inferensi dan analisis interaktif
 
-1.  **Hybrid Ensemble Learning:** Menggabungkan 3 arsitektur CNN (*EfficientNet-B0, MobileNetV2, Simple CNN*) dengan mekanisme *Weighted Voting* untuk akurasi maksimal.
-2.  **Neural Vision (XAI):** Visualisasi *Grad-CAM* untuk membuka "kotak hitam" AI, menampilkan area fokus model pada citra awan.
-3.  **Oktas Estimation:** Perhitungan otomatis tutupan awan (0-8 skala Oktas) menggunakan algoritma *Computer Vision* (Thresholding).
-4.  **Forensic Evidence:** Fitur *Content-Based Retrieval* yang menampilkan citra referensi dari dataset untuk memvalidasi kemiripan pola.
-5.  **Weather Simulation (T+1):** Sistem Pakar (*Rule-Based*) yang memproyeksikan potensi cuaca 1 jam ke depan berdasarkan morfologi awan.
-6.  **BMKG Station Integration:** Integrasi data stasiun meteorologi BMKG untuk informasi lokasi dan kondisi cuaca.
-7.  **Human-in-the-Loop:** Fitur validasi manual yang memungkinkan pakar mengoreksi prediksi sebelum mencetak laporan PDF.
-8.  **Voice Tactical Briefing:** Asisten suara otomatis yang membacakan hasil analisis layaknya *copilot*.
+## Research context
 
----
+Proyek ini dikembangkan sebagai bagian dari penelitian tesis yang berfokus pada klasifikasi awan dan analisis kondisi meteorologi berbasis citra digital. Tujuan utama penelitian adalah meningkatkan keandalan klasifikasi jenis awan dengan pendekatan deep learning yang dapat diinterpretasikan secara visual dan dikaitkan dengan konteks meteorologi.
 
-## 📸 Galeri Fitur
+## Main features
 
-| **Target Scan (Klasifikasi & Oktas)** | **Neural Vision (Explainable AI)** |
-|:---:|:---:|
-| ![Scan](screenshots/feature_scan.jpg) | ![XAI](screenshots/feature_xai.jpg) |
-| *Deteksi jenis awan, estimasi oktas, dan analisis dampak.* | *Heatmap Grad-CAM untuk transparansi keputusan AI.* |
+- Multi-model cloud classification
+- Weighted ensemble fusion
+- Explainable AI with Grad-CAM
+- Cloud coverage estimation (Oktas)
+- Weather impact reasoning using expert rules
+- Web interface for image upload and prediction
+- PDF report generation for decision support
 
-| **Forensic Evidence (Database Match)** | **Lab Metrics (Performance)** |
-|:---:|:---:|
-| ![Forensic](screenshots/feature_forensic.jpg) | ![Metrics](screenshots/feature_metrics.jpg) |
-| *Pencocokan pola visual dengan dataset referensi.* | *Evaluasi model (Confusion Matrix & Learning Curve).* |
+## Dataset
 
----
+Dataset penelitian terdiri dari beberapa kelas awan utama, meliputi:
 
-## 🛠️ Teknologi yang Digunakan
+- Clear Sky
+- Cirriform Clouds
+- Cumulonimbus Clouds
+- Cumulus Clouds
+- High Cumuliform Clouds
+- Stratiform Clouds
+- Stratocumulus Clouds
 
-| Kategori | Teknologi |
-|----------|-----------|
-| **Bahasa** | Python 3.10+ |
-| **Deep Learning** | PyTorch (Torchvision) |
-| **Web Framework** | Flask (Jinja2 Template) |
-| **Computer Vision** | OpenCV (cv2) |
-| **Data Visualization** | Matplotlib, Seaborn |
-| **Frontend** | Bootstrap 5, CSS3 (HUD Style), JavaScript |
-| **Report Generation** | FPDF |
+Catatan penting: dataset raw dan bobot model tidak disertakan di repository publik karena alasan ukuran, lisensi, dan keamanan. Struktur dataset serta instruksi untuk persiapan data tersedia pada dokumentasi penelitian dan script pelatihan yang ada pada repositori.
 
----
+## Repository structure
 
-## 📂 Struktur Folder
-
-```
-NeuralSky/
-├── app.py                      # Server utama Flask
-├── train_pytorch.py            # Script pelatihan model CNN
-├── evaluate_pytorch.py         # Script evaluasi model
-├── gradcam_pytorch.py          # Engine XAI (Grad-CAM)
-├── impact_logic.py             # Knowledge base sistem pakar
-├── report_generator.py         # Generator laporan PDF
-├── generate_oktas_proof.py     # Generator bukti visual Oktas
-├── generate_comparison.py      # Generator perbandingan model
-├── reconstruct_all_charts.py   # Rekonstruksi semua grafik
-├── requirements.txt            # Daftar dependensi Python
-├── README.md                   # Dokumentasi proyek
-│
-├── dataset/                    # Dataset citra awan
-│   ├── clouds_train/           # Data pelatihan (7 kelas)
-│   │   ├── cirriform clouds/
-│   │   ├── clear sky/
-│   │   ├── cumulonimbus clouds/
-│   │   ├── cumulus clouds/
-│   │   ├── high cumuliform clouds/
-│   │   ├── stratiform clouds/
-│   │   └── stratocumulus clouds/
-│   └── clouds_test/            # Data pengujian (7 kelas)
-│
-├── models_pytorch/             # Model terlatih (tidak di-commit ke Git)
-│   ├── efficientnet_finetuned.pth
-│   ├── mobilenet_finetuned.pth
-│   └── simple_cnn_v2.pth
-│
+```text
+neural-sky/
+├── README.md
+├── requirements.txt
+├── LICENSE
+├── app.py
+├── train_pytorch.py
+├── evaluate_pytorch.py
+├── gradcam_pytorch.py
+├── impact_logic.py
+├── report_generator.py
+├── generate_comparison.py
+├── generate_oktas_proof.py
+├── reconstruct_all_charts.py
+├── templates/
 ├── static/
-│   ├── css/
-│   │   └── hud_style.css       # Styling HUD interface
-│   ├── data/
-│   │   ├── bmkg_stations.json  # Data stasiun BMKG
-│   │   └── database/           # Database aplikasi
-│   │       ├── analyses.csv
-│   │       ├── evidence.csv
-│   │       ├── gradcam.csv
-│   │       ├── predictions.csv
-│   │       ├── upload_history.csv
-│   │       └── uploads.csv
-│   ├── heatmaps/               # Output visualisasi Grad-CAM
-│   ├── images/                 # Logo dan aset statis
-│   ├── reports/                # Laporan PDF yang dihasilkan
-│   ├── training_history/       # Grafik history pelatihan
-│   │   ├── efficientnet_chart.png
-│   │   ├── mobilenet_chart.png
-│   │   ├── simple_cnn_chart.png
-│   │   ├── model_comparison.png
-│   │   └── oktas_proof.png
-│   └── uploads/                # Citra yang diupload pengguna
-│
-├── templates/                  # Template HTML
-│   ├── index.html              # Halaman utama
-│   └── components/             # Komponen modular
-│       ├── css_styles.html
-│       ├── scripts.html
-│       ├── tab_bmkg.html
-│       ├── tab_evidence.html
-│       ├── tab_metrics.html
-│       ├── tab_scan.html
-│       ├── tab_simulation.html
-│       └── tab_xray.html
-│
-└── screenshots/                # Screenshot untuk dokumentasi
-    ├── dashboard_main.jpg
-    ├── feature_scan.jpg
-    ├── feature_xai.jpg
-    ├── feature_forensic.jpg
-    └── feature_metrics.jpg
+├── screenshots/
+├── docs/
+├── src/
+├── scripts/
+├── results/
+├── sample_images/
+└── .gitignore
 ```
 
----
+## Technology stack
 
-## 🚀 Cara Instalasi & Menjalankan
+- Python 3.10+
+- PyTorch
+- TorchVision
+- OpenCV
+- Flask
+- Bootstrap 5
+- Matplotlib / Seaborn
+- FPDF
 
-### 1. Clone Repository
+## Installation
+
+1. Clone the repository
 
 ```bash
 git clone https://github.com/yudharangga-hub/NeuralSky.git
 cd NeuralSky
 ```
 
-### 2. Setup Environment
-
-Disarankan menggunakan Virtual Environment (Python 3.10+):
+2. Create a virtual environment
 
 ```bash
 python -m venv venv
-venv\Scripts\activate     # Windows
-# atau: source venv/bin/activate  # Mac/Linux
+# Windows
+venv\Scripts\activate
+# Linux/macOS
+source venv/bin/activate
 ```
 
-### 3. Install Dependencies
+3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Siapkan Dataset & Model
+4. Prepare dataset and model
 
-- Pastikan folder `dataset/clouds_train` berisi 7 sub-folder kelas awan
-- Pastikan file model `.pth` ada di folder `models_pytorch/`
-- Atau jalankan `python train_pytorch.py` untuk melatih dari awal
+- Ensure the dataset is prepared according to the directory structure used by the training scripts.
+- Ensure model weights are available if you want to run inference without retraining.
 
-### 5. Jalankan Aplikasi
+5. Run the application
 
 ```bash
 python app.py
 ```
 
-Buka browser dan akses: **http://127.0.0.1:5000**
+Then open the local browser at:
+
+```text
+http://127.0.0.1:5000
+```
+
+## How to run training and evaluation
+
+```bash
+python train_pytorch.py
+python evaluate_pytorch.py
+```
+
+Optional supporting scripts:
+
+```bash
+python generate_comparison.py
+python generate_oktas_proof.py
+python reconstruct_all_charts.py
+```
+
+## Research note
+
+This repository reflects the thesis-version implementation of Neural Sky. For academic reproducibility, the complete source code is maintained in the repository, while large raw data artifacts and trained model assets are intentionally excluded from public GitHub storage to keep the project maintainable and safe for reuse.
+
+## Release version
+
+This repository is intended to be published under a stable thesis release tag, for example:
+
+```text
+v1.0-thesis
+```
+
+or
+
+```text
+thesis-final-2026
+```
+
+## License
+
+This project is intended for academic research and educational use. Please refer to the repository license and institutional guidelines before broader reuse or redistribution.
+
+## Contact
+
+For questions related to the implementation or research context, please contact the corresponding author or refer to the associated thesis documentation.
 
 ---
 
-## 📊 Kelas Awan yang Didukung
-
-| Kode | Nama Kelas Awan | Deskripsi |
-|------|-----------------|-----------|
-| CC | Cirriform Clouds | Awan berbentuk fiber, tinggi, tipis |
-| CS | Clear Sky | Langit cerah tanpa awan |
-| CB | Cumulonimbus Clouds | Awan badai, berpotensi hujan lebat |
-| CU | Cumulus Clouds | Awan bergumpal, biasanya baik |
-| HC | High Cumuliform Clouds | Awan cumuliform tinggi |
-| ST | Stratiform Clouds | Awan berlapis, mendung |
-| SC | Stratocumulus Clouds | Awan gumpal berlapis |
-
----
-
-## 🛡️ Disclaimer
-
-Fitur Simulasi Cuaca (T+1) pada aplikasi ini disusun menggunakan pendekatan Expert System berdasarkan literatur meteorologi. Hasil proyeksi bersifat teoritis dan tidak menggantikan prakiraan cuaca numerik (NWP) resmi dari instansi terkait yang menggunakan data sensor multi-variabel.
-
----
-
-## 📝 Lisensi
-
-Proyek ini dikembangkan untuk keperluan akademik (Tesis Magister).
+This repository is maintained as a research implementation and is designed to support reproducibility, further development, and academic reference.

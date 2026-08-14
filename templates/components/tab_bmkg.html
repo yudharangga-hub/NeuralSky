@@ -3,9 +3,12 @@
         <div class="d-flex align-items-center">
             <div class="me-4">
                 <h3 class="brand-font text-cyan m-0">
-                    <i class="fas fa-globe-asia me-2"></i>OFFICIAL BMKG DATA FEED
+                    <i class="fas fa-globe-asia me-2"></i>{{ texts.get('official_bmkg_feed', 'OFFICIAL BMKG DATA FEED') }}
                 </h3>
-                <small class="tech-font text-dim">LIVE CONNECTION: API.BMKG.GO.ID // REGION ID: {{ current_kode }}</small>
+                <small class="tech-font text-dim">{{ texts.get('live_connection', 'LIVE CONNECTION') }}: API.BMKG.GO.ID // REGION ID: {{ current_kode }}</small>
+                <div class="tech-font text-dim mt-2" style="font-size: 0.78rem; letter-spacing: 0.08em;">
+                    {{ texts.get('data_source', 'Data source: BMKG') }}
+                </div>
             </div>
             
             <div class="input-group shadow-sm">
@@ -36,7 +39,7 @@
                 <div class="d-flex justify-content-between align-items-end border-bottom border-secondary pb-2 mb-3">
                     <h5 class="text-white brand-font m-0">
                         <i class="fas fa-map-marker-alt text-danger me-2"></i>
-                        {% if lokasi.desa %}LOKASI: {{ lokasi.desa|upper }}{% else %}DATA LOKASI{% endif %}
+                        {% if lokasi.desa %}{{ ('LOKASI: ' + lokasi.desa)|upper }}{% else %}{{ 'DATA LOKASI' }}{% endif %}
                     </h5>
                     <span class="tech-font text-dim" style="font-size: 0.75rem;">KEC: {{ lokasi.kecamatan }}</span>
                 </div>
@@ -46,7 +49,7 @@
                         {% for item in forecasts %}
                         <div class="d-flex align-items-center justify-content-between p-2 mb-2 border border-dark rounded bg-black hover-glow" style="transition: 0.3s;">
                             <div class="text-white tech-font text-center me-2" style="min-width: 80px;">
-                                <span class="badge bg-dark border border-secondary d-block mb-1 text-dim" style="font-size: 0.6rem;">{{ item.local_datetime[:10] }}</span>
+                                    <span class="badge bg-dark border border-secondary d-block mb-1 text-dim" style="font-size: 0.6rem;">{{ item.local_datetime[:10] }}</span>
                                 <span class="fs-5 fw-bold text-cyan">{{ item.local_datetime[11:16] }}</span>
                             </div>
                             
@@ -65,7 +68,7 @@
                     {% else %}
                         <div class="text-center py-5 text-muted">
                             <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
-                            <p>Menunggu data dari server...</p>
+                            <p>{{ texts.get('waiting_server', 'Menunggu data dari server...') }}</p>
                         </div>
                     {% endif %}
                 </div>
@@ -121,7 +124,7 @@
                 
                 <div class="d-flex justify-content-between align-items-center border-bottom border-secondary pb-2 mb-3">
                     <h5 class="text-white brand-font m-0">
-                        <i class="fas fa-satellite me-2 text-purple"></i>SATELLITE
+                        <i class="fas fa-satellite me-2 text-purple"></i>{{ texts.get('satellite', 'SATELLITE') }}
                     </h5>
                     <select id="satSelector" class="form-select form-select-sm bg-dark text-cyan border-secondary tech-font" 
                             style="width: auto; height: 30px; font-size: 0.75rem; cursor: pointer;" 
@@ -159,7 +162,7 @@
                 
                 <div class="mt-auto p-3 border border-dark bg-black rounded" style="min-height: 120px;">
                     <small class="tech-font text-cyan fw-bold mb-2 d-block">
-                        <i class="fas fa-info-circle me-2"></i>ANALISIS CITRA:
+                        <i class="fas fa-info-circle me-2"></i>{{ texts.get('image_analysis', 'ANALISIS CITRA:') }}
                     </small>
                     <p id="satDesc" class="tech-font text-dim m-0" style="font-size: 0.75rem; text-align: justify; line-height: 1.4;">
                     </p>

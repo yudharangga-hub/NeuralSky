@@ -1,0 +1,5 @@
+model,accuracy,macro_precision,macro_recall,macro_f1,weighted_f1
+Simple CNN,0.8232,0.8351,0.8333,0.8273,0.8222
+MobileNet V2,0.9343,0.9273,0.9320,0.9286,0.9346
+EfficientNet B0,0.9697,0.9695,0.9697,0.9682,0.9692
+Hybrid Ensemble,0.9646,0.9674,0.9663,0.9660,0.9642
